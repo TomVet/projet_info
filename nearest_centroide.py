@@ -28,7 +28,7 @@ def coordonnees_centroide(liste_coordonne):
     """
     coordonnees = np.array([])
     # on calcule la dimension de l'espace considérer pour le centroide
-    nb_dimension = len(liste_coordonne[1])
+    nb_dimension = len(liste_coordonne)
     # on calcul les coordonnees du centroide dans chaque dimension
     for dimension in range(nb_dimension):
         somme = 0
@@ -94,7 +94,8 @@ def centroide_proche(point, centroides):
 data = dataset.make_classification(n_samples=50, n_features=2, n_informative=2, n_redundant=0, n_classes=3, n_clusters_per_class=1)
 
 coor_classe_1 = np.where(data[1] == 0)
-classe_1 = np.array([data[0][point] for point in coor_classe_1])
+classe_1 = [data[0][point] for point in coor_classe_1]
+centroide_1 = coordonnees_centroide(classe_1)
 
 coor_classe_2 = np.where(data[1] == 1)
 classe_2 =  np.array([data[0][point] for point in coor_classe_2])
@@ -105,4 +106,9 @@ classe_3 =  np.array([data[0][point] for point in coor_classe_3])
 centroide_1 = coordonnees_centroide(classe_1)
 centroide_2 = coordonnees_centroide(classe_2)
 centroide_3 = coordonnees_centroide(classe_3)
+
+plt.plot(centroide_1, 'bo')
+plt.plot(centroide_2, 'ro')
+plt.plot(centroide_3, 'go')
+plt.show()
 
