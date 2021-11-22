@@ -12,7 +12,7 @@ import sklearn.datasets as dataset
 
 def coordonnees_centroide(liste_coordonne):
     """
-    Calcule le centroide des points de liste_coordonne dans de dimension
+    Calcule le centroide des points de liste_coordonne de dimension
     nb_dimension
 
     Parameters
@@ -27,8 +27,8 @@ def coordonnees_centroide(liste_coordonne):
 
     """
     coordonnees = np.array([])
-    # on calcule la dimension de l'espace considérer pour le centroide
-    nb_dimension = len(liste_coordonne)
+    # on calcule la dimension de l'espace considere pour le centroide
+    nb_dimension = len(liste_coordonne[1])
     # on calcul les coordonnees du centroide dans chaque dimension
     for dimension in range(nb_dimension):
         somme = 0
