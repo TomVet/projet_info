@@ -32,7 +32,7 @@ def coordonnees_centroide(liste_coordonne):
     # on calcul les coordonnees du centroide dans chaque dimension
     for dimension in range(nb_dimension):
         somme = 0
-        # on somme les coordonnees de chaque point
+        # on somme les coordonnees de chaque points
         for point in liste_coordonne:
             somme += point[dimension]
         # on ajoute la somme / par le nombre de point a coordonnees
