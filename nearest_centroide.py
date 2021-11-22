@@ -28,7 +28,7 @@ def coordonnees_centroide(liste_coordonne):
     """
     coordonnees = np.array([])
     # on calcule la dimension de l'espace considere pour le centroide
-    nb_dimension = len(liste_coordonne[1])
+    nb_dimension = len(liste_coordonne)
     # on calcul les coordonnees du centroide dans chaque dimension
     for dimension in range(nb_dimension):
         somme = 0
@@ -107,8 +107,17 @@ centroide_1 = coordonnees_centroide(classe_1)
 centroide_2 = coordonnees_centroide(classe_2)
 centroide_3 = coordonnees_centroide(classe_3)
 
-plt.plot(centroide_1, 'bo')
-plt.plot(centroide_2, 'ro')
-plt.plot(centroide_3, 'go')
+x_1 = centroide_1[0]
+y_1 = centroide_1[1]
+
+x_2 = centroide_2[0]
+y_2 = centroide_2[1]
+
+x_3 = centroide_3[0]
+y_3 = centroide_3[1]
+
+plt.plot(x_1, y_1, 'bo')
+plt.plot(x_2, y_2, 'ro')
+plt.plot(x_3, y_3, 'go')
 plt.show()
 
