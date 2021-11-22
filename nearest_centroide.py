@@ -6,12 +6,9 @@ Created on Fri Nov 19 12:03:56 2021
 """
 
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import sklearn.datasets as dataset
 
-data = dataset.make_classification(n_samples=50, n_features=2, n_informative=2, n_redundant=0, n_classes=3, n_clusters_per_class=1)
-
-test = np.array([(1,3),(3,2),(9,4)])
 
 def coordonnees_centroide(liste_coordonne):
     """
@@ -93,3 +90,19 @@ def centroide_proche(point, centroides):
             distance_min = distance
             indice_du_min = indice
     return indice_du_min
+
+data = dataset.make_classification(n_samples=50, n_features=2, n_informative=2, n_redundant=0, n_classes=3, n_clusters_per_class=1)
+
+coor_classe_1 = np.where(data[1] == 0)
+classe_1 = np.array([data[0][point] for point in coor_classe_1])
+
+coor_classe_2 = np.where(data[1] == 1)
+classe_2 =  np.array([data[0][point] for point in coor_classe_2])
+
+coor_classe_3 = np.where(data[1] == 2)
+classe_3 =  np.array([data[0][point] for point in coor_classe_3])
+
+centroide_1 = coordonnees_centroide(classe_1)
+centroide_2 = coordonnees_centroide(classe_2)
+centroide_3 = coordonnees_centroide(classe_3)
+
