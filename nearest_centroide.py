@@ -6,7 +6,10 @@ Created on Fri Nov 19 12:03:56 2021
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+import sklearn.datasets as dataset
+
+data = dataset.make_classification(n_samples=50, n_features=2, n_informative=2, n_redundant=0, n_classes=3, n_clusters_per_class=1)
 
 test = np.array([(1,3),(3,2),(9,4)])
 
