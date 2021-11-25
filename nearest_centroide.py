@@ -113,7 +113,9 @@ data = dataset.make_classification(n_samples=50, n_features=2, n_informative=2, 
 coor_classe_1 = np.where(data[1] == 0)
 # on met les coordonnees des points de la classe 1 dans une nouvelle liste
 classe_1 = [data[0][point] for point in coor_classe_1]
-# on calcule le centroide de la classe
+x_classe_1 = [point[0] for point in classe_1]
+y_classe_1 = [point[1] for point in classe_1]
+# on calcule le centroide de la classe 1
 centroide_1 = coordonnees_centroide(classe_1)
 x_1 = centroide_1[0]
 y_1 = centroide_1[1]
@@ -122,20 +124,30 @@ y_1 = centroide_1[1]
 coor_classe_2 = np.where(data[1] == 1)
 # on met les coordonnees des points de la classe 2 dans une nouvelle liste
 classe_2 =  np.array([data[0][point] for point in coor_classe_2])
-# on calcule le centroide
+x_classe_2 = [point[0] for point in classe_2]
+y_classe_2 = [point[1] for point in classe_2]
+# on calcule le centroide de la classe 2
 centroide_2 = coordonnees_centroide(classe_2)
 x_2 = centroide_2[0]
 y_2 = centroide_2[1]
 
+# on cherche ou sont les points de la classe 3 dans la liste data
 coor_classe_3 = np.where(data[1] == 2)
+# on met les coordonnees des points de la classe 3 dans une nouvelle liste
 classe_3 =  np.array([data[0][point] for point in coor_classe_3])
+x_classe_3 = [point[0] for point in classe_3]
+y_classe_3 = [point[1] for point in classe_3]
+# on calcul le centroide de la classe 3
 centroide_3 = coordonnees_centroide(classe_3)
 x_3 = centroide_3[0]
 y_3 = centroide_3[1]
 
 
 plt.plot(x_1, y_1, 'bo')
+plt.plot(x_classe_1, y_classe_1, 'bx')
 plt.plot(x_2, y_2, 'ro')
+plt.plot(x_classe_2, y_classe_2, 'rx')
 plt.plot(x_3, y_3, 'go')
+plt.plot(x_classe_3, y_classe_3, 'gx')
 plt.show()
 
