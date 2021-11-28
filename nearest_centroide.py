@@ -28,7 +28,7 @@ def coordonnees_centroide(liste_coordonne):
     """
     coordonnees = np.array([])
     # on calcule la dimension de l'espace considere pour le centroide
-    nb_dimension = len(liste_coordonne)
+    nb_dimension = len(liste_coordonne[0])
     # on calcul les coordonnees du centroide dans chaque dimension
     for dimension in range(nb_dimension):
         somme = 0
@@ -97,7 +97,7 @@ def centroide_proche(point, centroides):
     return indice_du_min
 
 """
-on cree un dataset en 2 dimension pour tester l´algorythme et pouvoir le visualiser
+on cree un dataset en 2 dimension pour tester l´algorithme et pouvoir le visualiser
 nombre d'echantillon : 100
 nombre de parametre pour definir un point : 2
 nombre de parametre informatif : 2
@@ -112,7 +112,7 @@ data = dataset.make_classification(n_samples=100, n_features=2, n_informative=2,
 # on cherche ou sont les points de la classe 1 dans la liste data
 coor_classe_1 = np.where(data[1] == 0)
 # on met les coordonnees des points de la classe 1 dans une nouvelle liste
-classe_1 = [data[0][point] for point in coor_classe_1]
+classe_1 = data[0][coor_classe_1]
 x_classe_1 = [point[0] for point in classe_1]
 y_classe_1 = [point[1] for point in classe_1]
 # on calcule le centroide de la classe 1
@@ -123,7 +123,7 @@ y_1 = centroide_1[1]
 # on cherche ou sont les points de la classe 2 dans la liste data
 coor_classe_2 = np.where(data[1] == 1)
 # on met les coordonnees des points de la classe 2 dans une nouvelle liste
-classe_2 =  np.array([data[0][point] for point in coor_classe_2])
+classe_2 =  data[0][coor_classe_2]
 x_classe_2 = [point[0] for point in classe_2]
 y_classe_2 = [point[1] for point in classe_2]
 # on calcule le centroide de la classe 2
@@ -134,7 +134,7 @@ y_2 = centroide_2[1]
 # on cherche ou sont les points de la classe 3 dans la liste data
 coor_classe_3 = np.where(data[1] == 2)
 # on met les coordonnees des points de la classe 3 dans une nouvelle liste
-classe_3 =  np.array([data[0][point] for point in coor_classe_3])
+classe_3 = data[0][coor_classe_3]
 x_classe_3 = [point[0] for point in classe_3]
 y_classe_3 = [point[1] for point in classe_3]
 # on calcul le centroide de la classe 3
