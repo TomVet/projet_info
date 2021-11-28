@@ -143,11 +143,11 @@ x_3 = centroide_3[0]
 y_3 = centroide_3[1]
 
 
-plt.plot(x_1, y_1, 'bo')
-plt.plot(x_classe_1, y_classe_1, 'bx')
-plt.plot(x_2, y_2, 'ro')
-plt.plot(x_classe_2, y_classe_2, 'rx')
-plt.plot(x_3, y_3, 'go')
-plt.plot(x_classe_3, y_classe_3, 'gx')
+plt.plot(x_1, y_1, 'b^')
+plt.plot(x_classe_1, y_classe_1, 'b.')
+plt.plot(x_2, y_2, 'r^')
+plt.plot(x_classe_2, y_classe_2, 'r.')
+plt.plot(x_3, y_3, 'g^')
+plt.plot(x_classe_3, y_classe_3, 'g.')
 plt.show()
 
