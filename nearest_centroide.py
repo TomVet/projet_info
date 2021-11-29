@@ -97,15 +97,15 @@ def centroide_proche(point, centroides):
             indice_du_min = indice
     return indice_du_min
 
-"""
-on cree un dataset en 2 dimension pour tester l´algorithme et pouvoir le visualiser
-nombre d'echantillon : 100
-nombre de parametre pour definir un point : 2
-nombre de parametre informatif : 2
-nombre de parametre redondant : 0
-nombre de classe = 3
-nombre de groupe par classe = 1
-"""
+
+# on cree un dataset en 2 dimension pour tester l´algorithme et pouvoir le visualiser
+# nombre d'echantillon : 100
+# nombre de parametre pour definir un point : 2
+# nombre de parametre informatif : 2
+# nombre de parametre redondant : 0
+# nombre de classe = 3
+# nombre de groupe par classe = 1
+
 data = dataset.make_classification(n_samples=100, n_features=2, n_informative=2, n_redundant=0, n_classes=3, n_clusters_per_class=1)
 
 
