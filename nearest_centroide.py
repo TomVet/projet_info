@@ -150,4 +150,3 @@ plt.plot(x_classe_2, y_classe_2, 'r.')
 plt.plot(x_3, y_3, 'g^')
 plt.plot(x_classe_3, y_classe_3, 'g.')
 plt.show()
-
