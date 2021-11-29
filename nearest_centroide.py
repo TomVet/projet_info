@@ -5,15 +5,10 @@ Created on Fri Nov 19 12:03:56 2021
 @author: TomDION
 """
 
+import csv
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn.datasets as dataset
-import csv
-
-with open('heart.csv', newline='', encoding='utf-8') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=',')
-    for row in spamreader:
-        print('; '.join(row))
 
 
 def coordonnees_centroide(liste_coordonne):
@@ -156,3 +151,8 @@ plt.plot(x_classe_2, y_classe_2, 'r.')
 plt.plot(x_3, y_3, 'g^')
 plt.plot(x_classe_3, y_classe_3, 'g.')
 plt.show()
+
+with open('heart.csv', newline='', encoding='utf-8') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=',')
+    for row in spamreader:
+        print('; '.join(row))
