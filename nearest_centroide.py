@@ -8,6 +8,12 @@ Created on Fri Nov 19 12:03:56 2021
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn.datasets as dataset
+import csv
+
+with open('heart.csv', newline='', encoding='utf-8') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=',')
+    for row in spamreader:
+        print('; '.join(row))
 
 
 def coordonnees_centroide(liste_coordonne):
