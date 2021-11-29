@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def coordonnees_centroide(liste_coordonne):
     coordonnees = np.array([])
 
@@ -11,6 +14,7 @@ def coordonnees_centroide(liste_coordonne):
 
         coordonnees = np.append(coordonnees, [somme/len(liste_coordonne)])
     return coordonnees
+
 def distance_euclidienne(point_1, point_2):
     nb_dimension = len(point_1)
     distance = 0
@@ -26,7 +30,7 @@ def distance_euclidienne(point_1, point_2):
 def trouvercentroid(nouvelleliste): # doit trouver le centroid de nouvelleliste
     centroid=nouvelleliste[0]
     s=0
-   for point in nouvelle liste : # chercher le point avec la plus petite distance euclidienne par rapport aux autres points
+    for point in nouvelleliste : # chercher le point avec la plus petite distance euclidienne par rapport aux autres points
        for i in range(len(nouvelleliste)):
            point_2=nouvelleliste[i]
            s=s+distance_euclidienne(point,point_2)
@@ -47,7 +51,7 @@ def listecentroid(liste_coordonne,centroid,centroid0): # son centroid est donné
     listecentroid=np.array([centroid])
     for point in liste_coordonne :
         if distance_euclidienne(point,centroid) < distance_euclidienne(centroid,centroid0): # la distance entre les 2 centroids represente le rayon du cercle
-        listecentroid.append(point)
+            listecentroid.append(point)
     return listecentroid
 
 def nouvelleliste(liste_coordonne,centroid,centroid0):
@@ -61,7 +65,7 @@ def nouvelleliste(liste_coordonne,centroid,centroid0):
 
 def balltree(precision,liste_coordonne):
     listeensemble=np.array([])
-    centroid0=coordonnees_centroid(liste_coordonne)
+    centroid0=coordonnees_centroide(liste_coordonne)
     nouvelleliste=nouvelleliste(liste_coordonne,centroid,centroid0)
     listecentroid=listecentroid(liste_coordonne,centroid,centroid0)
     listeensemble.append([nouvelleliste,trouvercentroid(nouvelleliste)])
@@ -74,15 +78,11 @@ def balltree(precision,liste_coordonne):
         listeensemble.append([nouvelleliste,trouvercentroid(nouvelleliste)])
         listeensemble.append([listecentroid,centroid(liste_coordonne,centroid0)])
         listeensemble.remove(liste) #element à la position 0, qui vient detre utilisé dans la boucle
-            if len(listeensemble)==precision:
-                return listeensemble # ou un tour de plus pour fractionner la derniere liste puis reunir les liste[1] pour faire la prédiction
+        if len(listeensemble)==precision:
+            return listeensemble # ou un tour de plus pour fractionner la derniere liste puis reunir les liste[1] pour faire la prédiction
 def listedescentroids(listeensemble):
+    return
 
 def prediction(listedescentroids,pointmystere):
     # chercher le centroid avec la plus petite distance entre lui et le point
-
-
-
-
-
-
+    return 1
