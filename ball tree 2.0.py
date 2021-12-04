@@ -1,3 +1,7 @@
+import numpy as np
+import sklearn.datasets as dataset
+from math import*
+
 
 def trouver_coordonnees_centroide(liste_coordonne):
     coordonnees = np.array([])
@@ -16,11 +20,6 @@ def distance_euclidienne(point_1, point_2):
         somme = (point_1[dimension] - point_2[dimension])**2
         distance += somme
     return distance
-
-import numpy as np
-import sklearn.datasets as dataset
-from math import*
-
 
 data = np.array([[ 0.50170141,  1.46027261],
        [ 0.97413385,  0.6756709 ],
@@ -253,7 +252,8 @@ def creer_nouvelleliste(liste,pointplusloin):
 def creer_liste_complementaire(liste,nouvelleliste): # on cree une liste qui prend tout les points qui nont pas été pris par la premiere liste
     liste_complementaire=[]
     for point in liste:
-        if point not in nouvelleliste:
+        # if point not in nouvelleliste:
+        if not np.any(nouvelleliste, where=point):
             liste_complementaire.append(point)
     return liste_complementaire
 
