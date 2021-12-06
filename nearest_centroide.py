@@ -152,7 +152,25 @@ plt.plot(x_3, y_3, 'g^')
 plt.plot(x_classe_3, y_classe_3, 'g.')
 plt.show()
 
+# lecture dataset en csv
+dataset = np.array([ 63. ,   1. ,   3. , 145. , 233. ,   1. ,   0. , 150. ,   0. ,
+         2.3,   0. ,   0. ,   1., 1.])
 with open('heart.csv', newline='', encoding='utf-8') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',')
-    for row in spamreader:
-        print('; '.join(row))
+    nb_ligne = 0
+    for ligne in spamreader:
+        test = np.array([])
+        nb_ligne += 1
+        nb_colone = 0
+        for element in ligne:
+            test = np.append(test, float(element))
+            nb_colone += 1
+        dataset = np.concatenate((dataset, test), axis=0)
+
+dataset = np.resize(dataset, (nb_ligne, nb_colone))
+
+# separation en fonction de target
+
+
+for ligne in dataset:
+    if ligne[13] == 0
