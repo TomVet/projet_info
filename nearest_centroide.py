@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import sklearn.datasets as dataset
 
 
-def coordonnees_centroide(liste_coordonne):
+def calcul_coordonnees_centroide(liste_coordonne):
     """
     Calcule le centroide des points de liste_coordonne de dimension
     nb_dimension
@@ -40,7 +40,7 @@ def coordonnees_centroide(liste_coordonne):
         coordonnees = np.append(coordonnees, [somme/len(liste_coordonne)])
     return coordonnees
 
-def distance_euclidienne(point_1, point_2):
+def calcul_distance_euclidienne(point_1, point_2):
     """
     Calcul de la distance euclidienne au carre entre les points 1 et 2
 
@@ -67,7 +67,7 @@ def distance_euclidienne(point_1, point_2):
     return distance
 
 
-def centroide_proche(point, centroides):
+def find_nearest_centroid(point, centroides):
     """
     permet de trouver le centroide le plus proche du point
 
@@ -89,7 +89,7 @@ def centroide_proche(point, centroides):
     # on parcour la liste des centroides
     for indice, centroide in enumerate(centroides):
         # on calcul la distance entre le centroide et le point
-        distance = distance_euclidienne(point, centroide)
+        distance = calcul_distance_euclidienne(point, centroide)
         # si la nouvelle distance est plus petite que le minimum elle devient le minimum
         if distance_min > distance:
             distance_min = distance
@@ -117,7 +117,7 @@ classe_1 = data[0][coor_classe_1]
 x_classe_1 = [point[0] for point in classe_1]
 y_classe_1 = [point[1] for point in classe_1]
 # on calcule le centroide de la classe 1
-centroide_1 = coordonnees_centroide(classe_1)
+centroide_1 = calcul_coordonnees_centroide(classe_1)
 x_1 = centroide_1[0]
 y_1 = centroide_1[1]
 
@@ -128,7 +128,7 @@ classe_2 =  data[0][coor_classe_2]
 x_classe_2 = [point[0] for point in classe_2]
 y_classe_2 = [point[1] for point in classe_2]
 # on calcule le centroide de la classe 2
-centroide_2 = coordonnees_centroide(classe_2)
+centroide_2 = calcul_coordonnees_centroide(classe_2)
 x_2 = centroide_2[0]
 y_2 = centroide_2[1]
 
@@ -139,7 +139,7 @@ classe_3 = data[0][coor_classe_3]
 x_classe_3 = [point[0] for point in classe_3]
 y_classe_3 = [point[1] for point in classe_3]
 # on calcul le centroide de la classe 3
-centroide_3 = coordonnees_centroide(classe_3)
+centroide_3 = calcul_coordonnees_centroide(classe_3)
 x_3 = centroide_3[0]
 y_3 = centroide_3[1]
 
@@ -153,24 +153,59 @@ plt.plot(x_classe_3, y_classe_3, 'g.')
 plt.show()
 
 # lecture dataset en csv
-dataset = np.array([ 63. ,   1. ,   3. , 145. , 233. ,   1. ,   0. , 150. ,   0. ,
-         2.3,   0. ,   0. ,   1., 1.])
-with open('heart.csv', newline='', encoding='utf-8') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=',')
+dataset = np.array([])
+with open('heart.csv', newline='', encoding='utf-8') as datasetfile:
+    datasetreader = csv.reader(datasetfile, delimiter=',')
     nb_ligne = 0
-    for ligne in spamreader:
+    for ligne in datasetreader:
+        individue = np.array([])
+        nb_ligne += 1
+        nb_colone = 0
+        for element in ligne:
+            individue = np.append(individue, float(element))
+            nb_colone += 1
+        dataset = np.concatenate((dataset, individue))
+
+dataset = np.resize(dataset, (nb_ligne, nb_colone))
+
+# separation en fonction de target
+nb_parametre = 13
+malade = np.array([])
+nb_malade = 0
+sain = np.array([])
+nb_sain = 0
+for ligne in dataset:
+    if ligne[13] == 1:
+        malade = np.append(malade, ligne[:13])
+        nb_malade += 1
+    elif ligne[13] == 0:
+        sain = np.append(sain, ligne[:13])
+        nb_sain += 1
+
+malade = np.resize(malade, (nb_malade, nb_parametre))
+sain = np.resize(sain, (nb_sain, nb_parametre))
+
+centroide_malade = calcul_coordonnees_centroide(malade)
+centroide_sain = calcul_coordonnees_centroide(sain)
+
+testdata = np.array([])
+with open('heart_test.csv', newline='', encoding='utf-8') as testfile:
+    testreader = csv.reader(testfile, delimiter=',')
+    nb_ligne = 0
+    for ligne in testreader:
         test = np.array([])
         nb_ligne += 1
         nb_colone = 0
         for element in ligne:
             test = np.append(test, float(element))
             nb_colone += 1
-        dataset = np.concatenate((dataset, test), axis=0)
+        testdata = np.concatenate((testdata, test))
 
-dataset = np.resize(dataset, (nb_ligne, nb_colone))
+testdata = np.resize(dataset, (nb_ligne, nb_colone))
 
-# separation en fonction de target
+nb_bon = 0
 
+for test in testdata:
+    if find_nearest_centroid(test[:13], [centroide_malade,centroide_sain]) == 1 and test[13] == 1:
+        nb_bon+= 1
 
-for ligne in dataset:
-    if ligne[13] == 0
