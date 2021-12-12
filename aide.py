@@ -12,3 +12,4 @@ def nb_aleatoire_entre(a, b, nb):
     while len(liste) < nb:
         liste.add(rd.randint(a, b))
     return liste
+
