@@ -7,8 +7,8 @@ Created on Fri Nov 19 12:03:56 2021
 
 import csv
 import numpy as np
-import matplotlib.pyplot as plt
-import sklearn.datasets as dataset
+#import matplotlib.pyplot as plt
+#import sklearn.datasets as dataset
 
 
 def calcul_coordonnees_centroide(liste_coordonne):
@@ -81,10 +81,10 @@ def find_nearest_centroid(point, centroides):
     Returns
     -------
     indice_du_min : int
-        indice du centroide le plus proche de point dans la liste centroide.
+        indice du centroide le plus proche de point dans la liste centroides.
 
     """
-    distance_min = 0
+    distance_min = calcul_distance_euclidienne(point, centroides[0])
     indice_du_min = 0
     # on parcour la liste des centroides
     for indice, centroide in enumerate(centroides):
@@ -97,7 +97,39 @@ def find_nearest_centroid(point, centroides):
             indice_du_min = indice
     return indice_du_min
 
+def recuperer_donnee_csv(fichier, separateur=','):
+    """
+    cree une liste de liste contenant les donnees de fichier
 
+    Parameters
+    ----------
+    fichier : string
+        chemin du fichier csv a lire
+        ce fichier ne doit contenir que des float.
+
+    Returns
+    -------
+    data : np.array
+        array de dimension 2.
+
+    """
+    data = np.array([])
+    with open(fichier, newline='', encoding='utf-8') as dataFile:
+        dataReader = csv.reader(dataFile, delimiter=separateur)
+        nb_ligne = 0
+        for ligne in dataReader:
+            ligne_data = np.array([])
+            nb_ligne += 1
+            nb_colone = 0
+            for element in ligne:
+                ligne_data = np.append(ligne_data, float(element))
+                nb_colone += 1
+            data = np.concatenate((data, ligne_data))
+
+    data = np.resize(data, (nb_ligne, nb_colone))
+    return data
+
+"""
 # on cree un dataset en 2 dimension pour tester l´algorithme et pouvoir le visualiser
 # nombre d'echantillon : 100
 # nombre de parametre pour definir un point : 2
@@ -151,22 +183,10 @@ plt.plot(x_classe_2, y_classe_2, 'r.')
 plt.plot(x_3, y_3, 'g^')
 plt.plot(x_classe_3, y_classe_3, 'g.')
 plt.show()
+"""
 
 # lecture dataset en csv
-dataset = np.array([])
-with open('heart.csv', newline='', encoding='utf-8') as datasetfile:
-    datasetreader = csv.reader(datasetfile, delimiter=',')
-    nb_ligne = 0
-    for ligne in datasetreader:
-        individue = np.array([])
-        nb_ligne += 1
-        nb_colone = 0
-        for element in ligne:
-            individue = np.append(individue, float(element))
-            nb_colone += 1
-        dataset = np.concatenate((dataset, individue))
-
-dataset = np.resize(dataset, (nb_ligne, nb_colone))
+dataset = recuperer_donnee_csv('heart.csv')
 
 # separation en fonction de target
 nb_parametre = 13
@@ -187,25 +207,61 @@ sain = np.resize(sain, (nb_sain, nb_parametre))
 
 centroide_malade = calcul_coordonnees_centroide(malade)
 centroide_sain = calcul_coordonnees_centroide(sain)
+centroides = [centroide_sain, centroide_malade]
 
-testdata = np.array([])
-with open('heart_test.csv', newline='', encoding='utf-8') as testfile:
-    testreader = csv.reader(testfile, delimiter=',')
-    nb_ligne = 0
-    for ligne in testreader:
-        test = np.array([])
-        nb_ligne += 1
-        nb_colone = 0
-        for element in ligne:
-            test = np.append(test, float(element))
-            nb_colone += 1
-        testdata = np.concatenate((testdata, test))
-
-testdata = np.resize(dataset, (nb_ligne, nb_colone))
+testdata = recuperer_donnee_csv('heart_test.csv')
 
 nb_bon = 0
+nb_faux = 0
+
+# sain correspond a 0
+# malade correspond a 1
 
 for test in testdata:
-    if find_nearest_centroid(test[:13], [centroide_malade,centroide_sain]) == 1 and test[13] == 1:
+    if find_nearest_centroid(test[:13], centroides) == 1 and test[13] == 1:
         nb_bon+= 1
+    elif find_nearest_centroid(test[:13], centroides) == 0 and test[13] == 0:
+        nb_bon += 1
 
+print('Précision : ', nb_bon/len(testdata) * 100, '%')
+
+
+# lecture dataset en csv
+dataset = recuperer_donnee_csv('water_potability.csv',';')
+
+# separation en fonction de target
+nb_parametre = 9
+potable = np.array([])
+nb_potable = 0
+non_potable = np.array([])
+nb_non_potable = 0
+for ligne in dataset:
+    if ligne[nb_parametre] == 1:
+        potable = np.append(potable, ligne[:nb_parametre])
+        nb_potable += 1
+    elif ligne[nb_parametre] == 0:
+        non_potable = np.append(non_potable, ligne[:nb_parametre])
+        nb_non_potable += 1
+
+potable = np.resize(potable, (nb_potable, nb_parametre))
+non_potable = np.resize(non_potable, (nb_non_potable, nb_parametre))
+
+centroide_potable = calcul_coordonnees_centroide(potable)
+centroide_non_potable = calcul_coordonnees_centroide(non_potable)
+centroides = [centroide_non_potable, centroide_potable]
+
+testdata = recuperer_donnee_csv('water_potability_test_1.csv',';')
+
+nb_bon = 0
+nb_faux = 0
+
+# non_potable correspond a 0
+# potable correspond a 1
+
+for test in testdata:
+    if find_nearest_centroid(test[:nb_parametre], centroides) == 1 and test[nb_parametre] == 1:
+        nb_bon+= 1
+    elif find_nearest_centroid(test[:nb_parametre], centroides) == 0 and test[nb_parametre] == 0:
+        nb_bon += 1
+
+print('Précision : ', nb_bon/len(testdata) * 100, '%')
