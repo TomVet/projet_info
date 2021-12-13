@@ -2,4 +2,5 @@
 	ajout de test de l'algorithme nearest_centroide
 	création d'une fonction de création des centroides du dataset
 	création d'une fonction de test de l'algorithme
-	
+	erreur majeure du ball tree résolu
+	création d'une fonction renvoyant la sous liste associée (assimilable à une catégorie) au point de la predcition
