@@ -115,21 +115,12 @@ def recuperer_donnee_csv(fichier, separateur=','):
         array de dimension 2.
 
     """
-    data = np.array([])
     with open(fichier, newline='', encoding='utf-8') as dataFile:
+        data=[]
         dataReader = csv.reader(dataFile, delimiter=separateur)
-        nb_ligne = 0
         for ligne in dataReader:
-            ligne_data = np.array([])
-            nb_ligne += 1
-            nb_colone = 0
-            for element in ligne:
-                ligne_data = np.append(ligne_data, float(element))
-                nb_colone += 1
-            data = np.concatenate((data, ligne_data))
-
-    data = np.resize(data, (nb_ligne, nb_colone))
-    return data
+                data.append(ligne)
+        return data
 
 
 """
@@ -189,7 +180,7 @@ plt.show()
 """
 
 # lecture dataset en csv
-dataset = recuperer_donnee_csv('heart.csv')
+dataset = recuperer_donnee_csv('dataset_formater/heart.csv')
 
 # separation en fonction de target
 nb_parametre = 13
@@ -212,7 +203,7 @@ centroide_malade = calcul_coordonnees_centroide(malade)
 centroide_sain = calcul_coordonnees_centroide(sain)
 centroides = [centroide_sain, centroide_malade]
 
-testdata = recuperer_donnee_csv('heart_test.csv')
+testdata = recuperer_donnee_csv('dataset_formater/heart_test.csv')
 
 nb_bon = 0
 nb_faux = 0
@@ -230,7 +221,7 @@ print('Précision : ', nb_bon/len(testdata) * 100, '%')
 
 
 # lecture dataset en csv
-dataset = recuperer_donnee_csv('water_potability.csv',';')
+dataset = recuperer_donnee_csv('dataset_formater/water_potability.csv',';')
 
 # separation en fonction de target
 nb_parametre = 9
@@ -253,7 +244,7 @@ centroide_potable = calcul_coordonnees_centroide(potable)
 centroide_non_potable = calcul_coordonnees_centroide(non_potable)
 centroides = [centroide_non_potable, centroide_potable]
 
-testdata = recuperer_donnee_csv('water_potability_test_1.csv',';')
+testdata = recuperer_donnee_csv('dataset_formater/water_potability_test.csv',';')
 
 nb_bon = 0
 nb_faux = 0
