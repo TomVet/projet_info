@@ -106,6 +106,8 @@ def recuperer_donnee_csv(fichier, separateur=','):
     fichier : string
         chemin du fichier csv a lire
         ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        string contenant le separateur utiliser dans fichier. The default is ','.
 
     Returns
     -------
@@ -128,6 +130,7 @@ def recuperer_donnee_csv(fichier, separateur=','):
 
     data = np.resize(data, (nb_ligne, nb_colone))
     return data
+
 
 """
 # on cree un dataset en 2 dimension pour tester l´algorithme et pouvoir le visualiser
