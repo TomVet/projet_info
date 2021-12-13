@@ -1,0 +1,5 @@
+13/12/2021
+	ajout de test de l'algorithme nearest_centroide
+	création d'une fonction de création des centroides du dataset
+	création d'une fonction de test de l'algorithme
+	
