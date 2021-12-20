@@ -119,7 +119,7 @@ def recuperer_donnee_csv(fichier, separateur=','):
         data=[]
         dataReader = csv.reader(dataFile, delimiter=separateur)
         for ligne in dataReader:
-                data.append(ligne)
+            data.append(ligne)
         return data
 
 
