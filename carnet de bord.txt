@@ -4,3 +4,6 @@
 	création d'une fonction de test de l'algorithme
 	erreur majeure du ball tree résolu
 	création d'une fonction renvoyant la sous liste associée (assimilable à une catégorie) au point de la predcition
+20/12/2021
+	factorisation des nearest_centroide dans un nouveaux fichier
+	ajout d'une comparaison entre notre algorithme et celui de sklearn 
