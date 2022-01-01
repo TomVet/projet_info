@@ -196,8 +196,9 @@ def tester_data(fichier, centroides, nb_parametres, separateur=','):
 
 def centroide_plus_proche(dataset, datatest, nb_classe, separateur=','):
     """
-    calcul les centroides de dataset et test l'algorithme avec les donnees de datatest puis imprime
-    la precision de la classification
+    Test l'algorithme avec comme données d'apprentissage dataset et comme
+    données de test datatest puis calcul la précision et la vitesse d'éxecution
+    du programme
 
     Parameters
     ----------
@@ -217,7 +218,7 @@ def centroide_plus_proche(dataset, datatest, nb_classe, separateur=','):
     precision : float
         precision de l'algorithme sur cet ensemble de donnees (en pourcentage).
     temps : float
-        temps d'execution de la fonction en milliseconde'
+        temps d'execution de la fonction en milliseconde
 
     """
     start = time.time()
@@ -233,16 +234,17 @@ def centroide_plus_proche(dataset, datatest, nb_classe, separateur=','):
 
 def apprentissage(fichier, clf, separateur=','):
     """
-
+    Ajuste le modèle en fonction des données de fichier
 
     Parameters
     ----------
-    fichier : TYPE
-        DESCRIPTION.
-    clf : TYPE
-        DESCRIPTION.
-    separateur : TYPE, optional
-        DESCRIPTION. The default is ','.
+    fichier : string
+        chemin du fichier csv avec les donnees d'entrtainement
+        ce fichier ne doit contenir que des float.
+    clf : fonction
+        fonction de classification de la bibliothèque scikitlearn, ici NearestCentroid().
+    separateur : string, optional
+        string contenant le separateur utiliser dans fichier. The default is ','.
 
     Returns
     -------
@@ -260,21 +262,22 @@ def apprentissage(fichier, clf, separateur=','):
 
 def test_donnees(fichier, clf, separateur=','):
     """
-
+    test l'algorithme de classification pour les données de fichier
 
     Parameters
     ----------
-    fichier : TYPE
-        DESCRIPTION.
-    clf : TYPE
-        DESCRIPTION.
-    separateur : TYPE, optional
-        DESCRIPTION. The default is ','.
+    fichier : string
+        chemin du fichier csv avec les donnees de test
+        ce fichier ne doit contenir que des float.
+    clf : fonction
+        fonction de classification de la bibliothèque scikitlearn, ici NearestCentroid().
+    separateur : string, optional
+        string contenant le separateur utiliser dans fichier. The default is ','.
 
     Returns
     -------
-    precision : TYPE
-        DESCRIPTION.
+    precision : float
+        precision de l'algorithme sur cet ensemble de donnees (en pourcentage).
 
     """
     datatest = recuperer_donnee_csv(fichier, separateur)
@@ -286,25 +289,27 @@ def test_donnees(fichier, clf, separateur=','):
     precision = nb_bon / nb_test * 100
     return precision
 
-def centroide_plus(dataset, datatest, separateur=','):
+def centroide_plus_proche_sklearn(dataset, datatest, separateur=','):
     """
-
+    Réalise l'apprentissage et le test de l'algorithme
 
     Parameters
     ----------
-    dataset : TYPE
-        DESCRIPTION.
-    datatest : TYPE
-        DESCRIPTION.
-    separateur : TYPE, optional
-        DESCRIPTION. The default is ','.
+    dataset : np.array
+        chemin du fichier csv avec les donnees d'entrtainement
+        ce fichier ne doit contenir que des float.
+    datatest : np.array
+        chemin du fichier csv avec les donnees de test
+        ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        string contenant le separateur utiliser dans fichier. The default is ','.
 
     Returns
     -------
-    precision : TYPE
-        DESCRIPTION.
-    temps : TYPE
-        DESCRIPTION.
+    precision : float
+        precision de l'algorithme sur cet ensemble de donnees (en pourcentage).
+    temps : float
+        temps d'execution de la fonction en milliseconde
 
     """
     start = time.time()
@@ -318,18 +323,23 @@ def centroide_plus(dataset, datatest, separateur=','):
 
 def comparaison(dataset, datatest, nb_classe, separateur=','):
     """
-
+    Fait tourner l'algorithme de classification que l'on àa créée et celui de
+    la bibliothèque scikitlearn et imprime les précision et temps d'exection
+    des deux algorithmes
 
     Parameters
     ----------
-    dataset : TYPE
-        DESCRIPTION.
-    datatest : TYPE
-        DESCRIPTION.
-    nb_classe : TYPE
-        DESCRIPTION.
-    separateur : TYPE, optional
-        DESCRIPTION. The default is ','.
+    dataset : np.array
+        chemin du fichier csv avec les donnees d'entrtainement
+        ce fichier ne doit contenir que des float.
+    datatest : np.array
+        chemin du fichier csv avec les donnees de test
+        ce fichier ne doit contenir que des float.
+    nb_classe : int
+        nombre de classe dans le fichier.
+    separateur : string, optional
+        string contenant le separateur utiliser dans fichier.
+        The default is ','.
 
     Returns
     -------
@@ -337,7 +347,7 @@ def comparaison(dataset, datatest, nb_classe, separateur=','):
 
     """
     precision_1, temps_1 = centroide_plus_proche(dataset, datatest, nb_classe, separateur)
-    precision_2, temps_2 = centroide_plus(dataset, datatest, separateur)
+    precision_2, temps_2 = centroide_plus_proche_sklearn(dataset, datatest, separateur)
     print(f"Notre algorithme :\n\tPrécision : {precision_1 :.2f} %\n\tTemps d'execution : \
 {temps_1 :.3f} ms\nAlgorithme du module :\n\tPrécision : {precision_2 :.2f} %\n\tTemps \
 d'execution : {temps_2 :.3f} ms\n")
