@@ -1,3 +1,6 @@
+lien du github avec les fichiers du projet:
+	https://github.com/TomVet/projet_info
+
 13/12/2021
 	ajout de test de l'algorithme nearest_centroide
 	création d'une fonction de création des centroides du dataset
