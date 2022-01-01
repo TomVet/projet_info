@@ -7,3 +7,5 @@
 20/12/2021
 	factorisation des nearest_centroide dans un nouveaux fichier
 	ajout d'une comparaison entre notre algorithme et celui de sklearn 
+01/01/2022
+	ajout de commentaire au fichier nearest_centroide_v2.py
