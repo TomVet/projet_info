@@ -239,7 +239,7 @@ def apprentissage(fichier, clf, separateur=','):
     Parameters
     ----------
     fichier : string
-        chemin du fichier csv avec les donnees d'entrtainement
+        chemin du fichier csv avec les donnees d'entrainement
         ce fichier ne doit contenir que des float.
     clf : fonction
         fonction de classification de la bibliothèque scikitlearn, ici NearestCentroid().
@@ -323,7 +323,7 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=','):
 
 def comparaison(dataset, datatest, nb_classe, separateur=','):
     """
-    Fait tourner l'algorithme de classification que l'on àa créée et celui de
+    Fait tourner l'algorithme de classification que l'on a créée et celui de
     la bibliothèque scikitlearn et imprime les précision et temps d'exection
     des deux algorithmes
 
