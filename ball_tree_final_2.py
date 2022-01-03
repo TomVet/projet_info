@@ -197,21 +197,6 @@ def D_euclidienne(point_1, point_2):
     return distance
 
 
-# def trouver_point_centre(liste):
-#     listepoint = []
-#     listedistance = []
-#     for i in range(len(liste)):
-#         s = 0
-#         for k in range(len(liste)):
-#             point_1 = liste[i]
-#             point_2 = liste[k]
-#             s = s+D_euclidienne(point_1, point_2)
-#         listedistance.append(s)
-#         listepoint.append(i)
-#     valeurmin = min(listedistance)
-#     indicecentroid = listedistance.index(valeurmin)
-#     return liste[indicecentroid]
-
 def trouver_P_loin(liste):
 #la fonction va determiner le point le plus eloigné du centroid de la liste
     centroid = trouver_coordonnees_centroide(liste)
@@ -249,7 +234,6 @@ def balltree(precision,liste):
     liste_a_diviser = liste
     for tour in range(precision):
         P_loin = trouver_P_loin(liste_a_diviser)
-        centroid = trouver_coordonnees_centroide(liste_a_diviser)
         nouvelleliste = creer_nouvelleliste(liste_a_diviser,P_loin)
         liste_complementaire = creer_liste_complementaire(liste_a_diviser,P_loin)
 # on a fractionné la liste initiale en 2 listes qui regroupent ensemble tout les points
