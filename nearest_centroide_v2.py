@@ -10,6 +10,15 @@ import time
 import numpy as np
 from sklearn.neighbors import NearestCentroid
 
+heart = 'dataset_formater/heart.csv'
+heart_test = 'dataset_formater/heart_test.csv'
+water_potability = 'dataset_formater/water_potability.csv'
+water_potability_test = 'dataset_formater/water_potability_test.csv'
+diabetes = 'dataset_formater/diabetes.csv'
+diabetes_test = 'dataset_formater/diabetes_test.csv'
+iris = 'dataset_formater/iris.csv'
+iris_test = 'dataset_formater/iris_test.csv'
+
 # On crée les fonctions necessaire à la réalisation d'un algorithme de classification centroide
 # le plus proche
 
@@ -353,7 +362,7 @@ def comparaison(dataset, datatest, nb_classe, separateur=','):
 d'execution : {temps_2 :.3f} ms\n")
 
 
-comparaison('dataset_formater/heart.csv', 'dataset_formater/heart_test.csv', 2)
-comparaison('dataset_formater/water_potability.csv', 'dataset_formater/water_potability_test.csv', 2, ';')
-comparaison('dataset_formater/diabetes.csv', 'dataset_formater/diabetes_test.csv', 2, ';')
-comparaison('dataset_formater/iris.csv', 'dataset_formater/iris_test.csv', 3, ';')
+comparaison(heart, heart_test, 2)
+comparaison(water_potability, water_potability_test, 2, ';')
+comparaison(diabetes, diabetes_test, 2, ';')
+comparaison(iris, iris_test, 3, ';')

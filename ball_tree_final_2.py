@@ -1,3 +1,4 @@
+import csv
 import numpy as np
 data  =  np.array([[ 0.50170141,  1.46027261],
        [ 0.97413385,  0.6756709 ],
@@ -175,6 +176,33 @@ data2  =  np.array([[ 0.50170141,  1.46027261],
        [ 2.31657724, -0.78652379],
        [ 1.41037629,  1.63239969],
        [ 0.27188321,  0.6682191 ]])
+
+def recuperer_donnee_csv(fichier, separateur=','):
+    """
+    cree une liste de liste contenant les donnees de fichier
+
+    Parameters
+    ----------
+    fichier : string
+        chemin du fichier csv a lire
+        ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        string contenant le separateur utiliser dans fichier. The default is ','.
+
+    Returns
+    -------
+    data : list
+        list de dimension 2.
+
+    """
+    with open(fichier, newline='', encoding='utf-8') as data_file:
+        data=[]
+        data_reader = csv.reader(data_file, delimiter=separateur)
+        for ligne in data_reader:
+            data.append(ligne)
+        data = np.array(data)
+        data = data.astype(np.float64)
+        return data
 
 
 def trouver_coordonnees_centroide(liste_coordonne):
