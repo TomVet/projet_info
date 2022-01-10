@@ -12,3 +12,6 @@ lien du github avec les fichiers du projet:
 	ajout d'une comparaison entre notre algorithme et celui de sklearn 
 01/01/2022
 	ajout de commentaire au fichier nearest_centroide_v2.py
+10/01/2022
+	test nearest centroide sur ordi du lycée
+	
