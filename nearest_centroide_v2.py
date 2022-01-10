@@ -32,37 +32,37 @@ def calcul_coordonnees_centroide(liste_coordonne):
     coordonnees = []
     # on calcule la dimension de l'espace considéré pour le centroide
     nb_dimension = len(liste_coordonne[0])
-    # on calcul les coordonnees du centroide dans chaque dimension
+    # on calcule les coordonnées du centroide dans chaque dimension
     for dimension in range(nb_dimension):
         somme = 0
-        # on somme les coordonnees de chaque points
+        # on somme les coordonnées de chaque points
         for point in liste_coordonne:
             somme += point[dimension]
-        # on ajoute la somme / par le nombre de point a coordonnees
+        # on ajoute la somme / par le nombre de point a coordonnées
         coordonnees = np.append(coordonnees, somme/len(liste_coordonne))
     return coordonnees
 
 def calcul_distance_euclidienne(point_1, point_2):
     """
-    Calcul de la distance euclidienne au carre entre les points 1 et 2
+    Calcule de la distance euclidienne au carré entre les points 1 et 2
 
     Parameters
     ----------
     point_1 : list
-        liste des coordonnees du point 1.
+        liste des coordonnées du point 1.
     point_2 : list
-        liste des coordonnees du point 2.
+        liste des coordonnées du point 2.
 
     Returns
     -------
     distance : float
-        distance euclidienne au carre entre les points 1 et 2.
+        distance euclidienne au carré entre les points 1 et 2.
 
     """
     # on calcule la dimension de l'espace des 2 points
     nb_dimension = len(point_1)
     distance = 0
-    # on fait la somme au carre des coordonnees des points 1 et 2 dans chaque dimension
+    # on fait la somme au carré des coordonnées des points 1 et 2 dans chaque dimension
     for dimension in range(nb_dimension):
         somme = (point_1[dimension] - point_2[dimension])**2
         distance += somme
@@ -75,9 +75,9 @@ def find_nearest_centroid(point, centroides):
     Parameters
     ----------
     point : list
-        liste des coordonnee du point.
+        liste des coordonnées du point.
     centroides : list
-        liste de coordonnee de centroides.
+        liste de coordonnée de centroides.
 
     Returns
     -------
@@ -87,11 +87,11 @@ def find_nearest_centroid(point, centroides):
     """
     distance_min = calcul_distance_euclidienne(point, centroides[0])
     indice_du_min = 0
-    # on parcour la liste des centroides
+    # on parcoure la liste des centroides
     for indice, centroide in enumerate(centroides):
-        # on calcul la distance entre le centroide et le point
+        # on calcule la distance entre le centroide et le point
         distance = calcul_distance_euclidienne(point, centroide)
-        # si la nouvelle distance est plus petite que le minimum elle devient le minimum
+        # si la nouvelle distance est plus petite que le minimum, elle devient le minimum
         if distance_min > distance:
             distance_min = distance
             # on conserve l´indice, dans la liste de centroides, du centroide le plus proche
@@ -100,7 +100,7 @@ def find_nearest_centroid(point, centroides):
 
 def recuperer_donnee_csv(fichier, separateur=','):
     """
-    cree une liste de liste contenant les donnees de fichier
+    créée une liste de liste contenant les données de fichier
 
     Parameters
     ----------
@@ -108,7 +108,7 @@ def recuperer_donnee_csv(fichier, separateur=','):
         chemin du fichier csv a lire
         ce fichier ne doit contenir que des float.
     separateur : string, optional
-        string contenant le separateur utiliser dans fichier. The default is ','.
+        string contenant le séparateur utilisé dans fichier. The default is ','.
 
     Returns
     -------
@@ -127,24 +127,24 @@ def recuperer_donnee_csv(fichier, separateur=','):
 
 def calcul_centroides(fichier, nb_classe, separateur=','):
     """
-    Calcul les centroides pour chaque classe de fichier
+    Calcule les centroides pour chaque classe de fichier
 
     Parameters
     ----------
     fichier : string
-        chemin du fichier csv avec les donnees d'entrtainement
+        chemin du fichier csv avec les données d'entrainement
         ce fichier ne doit contenir que des float.
     nb_classe : int
         nombre de classe dans le fichier
     separateur : string, optional
-        string contenant le separateur utiliser dans fichier. The default is ','.
+        string contenant le séparateur utilisé dans fichier. The default is ','.
 
     Returns
     -------
     centroides : np.array
-        liste des coordonnees des centroides de chaque classe.
+        liste des coordonnées des centroides de chaque classe.
     nb_parametres : int
-        nombre de parametre pour definir chaque classe.
+        nombre de parametres pour définir chaque classe.
 
     """
     dataset = recuperer_donnee_csv(fichier, separateur)
@@ -161,26 +161,26 @@ def calcul_centroides(fichier, nb_classe, separateur=','):
 
 def tester_data(fichier, centroides, nb_parametres, separateur=','):
     """
-    test la precision de l'algorithme
+    test la précision de l'algorithme
 
     Parameters
     ----------
     fichier : string
-        chemin du fichier csv avec les donnees de test
+        chemin du fichier csv avec les données de test
         ce fichier ne doit contenir que des float.
     centroides : np.array
-        liste des coordonnees des centroides de chaque classe.
+        liste des coordonnées des centroides de chaque classe.
     nb_parametres : int
-        nombre de parametre pour definir chaque classe.
+        nombre de paramètres pour définir chaque classe.
     separateur : string, optional
-        string contenant le separateur utiliser dans fichier. The default is ','.
+        string contenant le séparateur utilisé dans fichier. The default is ','.
 
     Returns
     -------
     nb_test : int
         nombre de test effectuer.
     nb_bon : int
-        nombre de test reussi.
+        nombre de test réussi.
 
     """
     test_data = recuperer_donnee_csv(fichier, separateur)
@@ -203,22 +203,22 @@ def centroide_plus_proche(dataset, datatest, nb_classe, separateur=','):
     Parameters
     ----------
     dataset : string
-        chemin du fichier csv avec les donnees d'entrtainement
+        chemin du fichier csv avec les données d'entrainement
         ce fichier ne doit contenir que des float.
     datatest : string
-        chemin du fichier csv avec les donnees de test
+        chemin du fichier csv avec les données de test
         ce fichier ne doit contenir que des float.
     nb_classe : int
         nombre de classe dans le fichier.
     separateur : string, optional
-        string contenant le separateur utiliser dans fichier. The default is ','.
+        string contenant le séparateur utilisé dans fichier. The default is ','.
 
     Returns
     -------
     precision : float
-        precision de l'algorithme sur cet ensemble de donnees (en pourcentage).
+        précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
-        temps d'execution de la fonction en milliseconde
+        temps d'éxecution de la fonction en milliseconde
 
     """
     start = time.time()
@@ -239,7 +239,7 @@ def apprentissage(fichier, clf, separateur=','):
     Parameters
     ----------
     fichier : string
-        chemin du fichier csv avec les donnees d'entrainement
+        chemin du fichier csv avec les données d'entrainement
         ce fichier ne doit contenir que des float.
     clf : fonction
         fonction de classification de la bibliothèque scikitlearn, ici NearestCentroid().
@@ -272,12 +272,12 @@ def test_donnees(fichier, clf, separateur=','):
     clf : fonction
         fonction de classification de la bibliothèque scikitlearn, ici NearestCentroid().
     separateur : string, optional
-        string contenant le separateur utiliser dans fichier. The default is ','.
+        string contenant le séparateur utilisé dans fichier. The default is ','.
 
     Returns
     -------
     precision : float
-        precision de l'algorithme sur cet ensemble de donnees (en pourcentage).
+        précision de l'algorithme sur cet ensemble de données (en pourcentage).
 
     """
     datatest = recuperer_donnee_csv(fichier, separateur)
@@ -296,20 +296,20 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=','):
     Parameters
     ----------
     dataset : np.array
-        chemin du fichier csv avec les donnees d'entrtainement
+        chemin du fichier csv avec les données d'entrainement
         ce fichier ne doit contenir que des float.
     datatest : np.array
-        chemin du fichier csv avec les donnees de test
+        chemin du fichier csv avec les données de test
         ce fichier ne doit contenir que des float.
     separateur : string, optional
-        string contenant le separateur utiliser dans fichier. The default is ','.
+        string contenant le séparateur utilisé dans fichier. The default is ','.
 
     Returns
     -------
     precision : float
-        precision de l'algorithme sur cet ensemble de donnees (en pourcentage).
+        précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
-        temps d'execution de la fonction en milliseconde
+        temps d'éxecution de la fonction en milliseconde
 
     """
     start = time.time()
@@ -324,21 +324,21 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=','):
 def comparaison(dataset, datatest, nb_classe, separateur=','):
     """
     Fait tourner l'algorithme de classification que l'on a créée et celui de
-    la bibliothèque scikitlearn et imprime les précision et temps d'exection
+    la bibliothèque scikitlearn et imprime les précisions et temps d'éxecutions
     des deux algorithmes
 
     Parameters
     ----------
     dataset : np.array
-        chemin du fichier csv avec les donnees d'entrtainement
+        chemin du fichier csv avec les données d'entrainement
         ce fichier ne doit contenir que des float.
     datatest : np.array
-        chemin du fichier csv avec les donnees de test
+        chemin du fichier csv avec les données de test
         ce fichier ne doit contenir que des float.
     nb_classe : int
         nombre de classe dans le fichier.
     separateur : string, optional
-        string contenant le separateur utiliser dans fichier.
+        string contenant le séparateur utilisé dans fichier.
         The default is ','.
 
     Returns
