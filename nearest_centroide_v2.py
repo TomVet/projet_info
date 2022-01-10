@@ -21,16 +21,16 @@ def calcul_coordonnees_centroide(liste_coordonne):
     Parameters
     ----------
     liste_coordonne : list
-        liste de coordonnee de point de meme dimension.
+        liste de coordonnée de point de même dimension.
 
     Returns
     -------
     coordonnees : list
-        liste des coordonnee du centroide calcule.
+        liste des coordonnée du centroide calculé.
 
     """
     coordonnees = []
-    # on calcule la dimension de l'espace considere pour le centroide
+    # on calcule la dimension de l'espace considéré pour le centroide
     nb_dimension = len(liste_coordonne[0])
     # on calcul les coordonnees du centroide dans chaque dimension
     for dimension in range(nb_dimension):
