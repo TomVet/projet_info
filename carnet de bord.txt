@@ -14,4 +14,5 @@ lien du github avec les fichiers du projet:
 	ajout de commentaire au fichier nearest_centroide_v2.py
 10/01/2022
 	test nearest centroide sur ordi du lycée
-	
+17/01/2022
+        test sur dataset de ball tree
