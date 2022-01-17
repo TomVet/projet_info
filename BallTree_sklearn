@@ -1,0 +1,65 @@
+from sklearn.neighbors import BallTree
+import numpy as np
+
+def recuperer_donnee_csv(fichier, separateur=','):
+    """
+    créée une liste de liste contenant les données de fichier
+    Parameters
+    ----------
+    fichier : string
+        chemin du fichier csv a lire
+        ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        string contenant le séparateur utilisé dans fichier. The default is ','.
+    Returns
+    -------
+    data : list
+        list de dimension 2.
+    """
+    with open(fichier, newline='', encoding='utf-8') as data_file:
+        data=[]
+        data_reader = csv.reader(data_file, delimiter=separateur)
+        for ligne in data_reader:
+            data.append(ligne)
+        data = np.array(data)
+        data = data.astype(np.float64)
+        return data
+
+
+
+def ball_tree_sklearn(dataset, datatest, separateur=','):
+    """
+    Réalise l'apprentissage et le test de l'algorithme
+    Parameters
+    ----------
+    dataset : np.array
+        chemin du fichier csv avec les données d'entrainement
+        ce fichier ne doit contenir que des float.
+    datatest : np.array
+        chemin du fichier csv avec les données de test
+        ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        string contenant le séparateur utilisé dans fichier. The default is ','.
+    Returns
+    -------
+    precision : float
+        précision de l'algorithme sur cet ensemble de données (en pourcentage).
+    temps : float
+        temps d'éxecution de la fonction en milliseconde
+    """
+    
+    X = data
+    start = time.time()
+    clf = BallTree(X)
+    apprentissage(dataset, clf, separateur)
+    precision = test_donnees(datatest, clf, separateur)
+    end = time.time()
+    temps = (end - start) * 1000
+    return precision, temps
+
+
+
+
+
+def apprentissage(fichier, clf, separateur=','):
+    dist,ind = clf.query(X[:1], k=1)
