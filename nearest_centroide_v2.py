@@ -224,7 +224,7 @@ def centroide_plus_proche(dataset, datatest, nb_classe, separateur=','):
 
     Returns
     -------
-    precision : float
+    fiabilite : float
         précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
         temps d'éxecution de la fonction en milliseconde
@@ -233,10 +233,10 @@ def centroide_plus_proche(dataset, datatest, nb_classe, separateur=','):
     start = time.time()
     centroides, nb_parametres = calcul_centroides(dataset, nb_classe, separateur)
     nb_test, nb_bon = tester_data(datatest, centroides, nb_parametres, separateur)
-    precision = nb_bon / nb_test * 100
+    fiabilite = nb_bon / nb_test * 100
     end = time.time()
     temps = (end - start) * 1000
-    return precision, temps
+    return fiabilite, temps
 
 
 # on crée les fonction pour comparer l'algorithme que l'on a fait avec celui d'une bibliothèque
@@ -285,7 +285,7 @@ def test_donnees(fichier, clf, separateur=','):
 
     Returns
     -------
-    precision : float
+    fiabilite : float
         précision de l'algorithme sur cet ensemble de données (en pourcentage).
 
     """
@@ -295,8 +295,8 @@ def test_donnees(fichier, clf, separateur=','):
     for point in datatest:
         if clf.predict([point[:-1]]) == point[-1]:
             nb_bon += 1
-    precision = nb_bon / nb_test * 100
-    return precision
+    fiabilite = nb_bon / nb_test * 100
+    return fiabilite
 
 def centroide_plus_proche_sklearn(dataset, datatest, separateur=','):
     """
@@ -315,7 +315,7 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=','):
 
     Returns
     -------
-    precision : float
+    fiabilite : float
         précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
         temps d'éxecution de la fonction en milliseconde
@@ -324,10 +324,10 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=','):
     start = time.time()
     clf = NearestCentroid()
     apprentissage(dataset, clf, separateur)
-    precision = test_donnees(datatest, clf, separateur)
+    fiabilite = test_donnees(datatest, clf, separateur)
     end = time.time()
     temps = (end - start) * 1000
-    return precision, temps
+    return fiabilite, temps
 
 
 def comparaison(dataset, datatest, nb_classe, separateur=','):
@@ -355,14 +355,14 @@ def comparaison(dataset, datatest, nb_classe, separateur=','):
     None.
 
     """
-    precision_1, temps_1 = centroide_plus_proche(dataset, datatest, nb_classe, separateur)
-    precision_2, temps_2 = centroide_plus_proche_sklearn(dataset, datatest, separateur)
-    print(f"Notre algorithme :\n\tPrécision : {precision_1 :.2f} %\n\tTemps d'execution : \
-{temps_1 :.3f} ms\nAlgorithme du module :\n\tPrécision : {precision_2 :.2f} %\n\tTemps \
+    fiabilite_1, temps_1 = centroide_plus_proche(dataset, datatest, nb_classe, separateur)
+    fiabilite_2, temps_2 = centroide_plus_proche_sklearn(dataset, datatest, separateur)
+    print(f"Notre algorithme :\n\tPrécision : {fiabilite_1 :.2f} %\n\tTemps d'execution : \
+{temps_1 :.3f} ms\nAlgorithme du module :\n\tPrécision : {fiabilite_2 :.2f} %\n\tTemps \
 d'execution : {temps_2 :.3f} ms\n")
 
 
 comparaison(heart, heart_test, 2)
-comparaison(water_potability, water_potability_test, 2, ';')
-comparaison(diabetes, diabetes_test, 2, ';')
-comparaison(iris, iris_test, 3, ';')
+comparaison(water_potability, water_potability_test, 2)
+comparaison(diabetes, diabetes_test, 2)
+comparaison(iris, iris_test, 3)
