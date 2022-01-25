@@ -18,6 +18,8 @@ diabetes = 'dataset_formater/diabetes.csv'
 diabetes_test = 'dataset_formater/diabetes_test.csv'
 iris = 'dataset_formater/iris.csv'
 iris_test = 'dataset_formater/iris_test.csv'
+wineQT = 'dataset_formater/wineQT.csv'
+wineQT_test = 'dataset_formater/wineQT_test.csv'
 
 # On crée les fonctions necessaire à la réalisation d'un algorithme de classification centroide
 # le plus proche
@@ -366,3 +368,4 @@ comparaison(heart, heart_test, 2)
 comparaison(water_potability, water_potability_test, 2)
 comparaison(diabetes, diabetes_test, 2)
 comparaison(iris, iris_test, 3)
+comparaison(wineQT, wineQT_test, 6)
