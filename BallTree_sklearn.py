@@ -188,27 +188,26 @@ def classification_balltree(precision, dataset, datatest, separateur=','):
     temps = (end - start) * 1000
     return fiabilite, temps
 
-def ball_tree_sklearn(dataset, datatest, separateur=','):
-
-    clf = BallTree(data)
-    indice = clf.query(data, k=1, return_distance=False)
+def ball_tree_sklearn(precison, listes):
+    clf = BallTree(listes)
+    indice = clf.query(listes, k=1, return_distance=False)
     centroid_proche = liste_centroid[indice]
     return centroid_proche
 
-def prediction_sklearn(liste_de_listes, centroïdes):
-    centroide = ball_tree_sklearn(dataset, datatest, separateur=',')
+def prediction_sklearn(liste_de_listes, centroides):
+    centroide = ball_tree_sklearn(precision, liste)
     classe = classe_liste(retrouver_liste(centroide, liste_de_listes , centroides))
     return classe
 
 def classification_balltree_sklearn(precision, dataset, datatest, separateur=','):
     start = time.time()
-    listes = balltree(precision, recuperer_donnee_csv(dataset, separateur))
+    listes = ball_tree_sklearn(precision, recuperer_donnee_csv(dataset, separateur))
     centroides = creer_liste_centroid(listes)
     nb_bon = 0
     test_data = recuperer_donnee_csv(datatest, separateur=',')
     nb_test = len(test_data)
     for test in test_data:
-        if prediction_sklearn(test, listes, centroides) == test[-1]:
+        if prediction_sklearn(listes, centroides) == test[-1]:
             nb_bon += 1
     fiabilite = nb_bon / nb_test * 100
     end = time.time()
