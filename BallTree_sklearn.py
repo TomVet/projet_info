@@ -214,6 +214,14 @@ def classification_balltree_sklearn(precision, dataset, datatest, separateur=','
     temps = (end - start) * 1000
     return fiabilite, temps
 
+from sklearn.neighbors import KNeighborsClassifier
+
+def ball_tree_sklearn(dataset, datatest, separateur=','):
+    neigh = KNeighborsClassifier(n_neighbors = len(dataset-1),algorithm = 'ball_tree') 
+    neigh.fit(dataset, y)
+    
+    print(neigh.predict(datatest)
+
 
 def comparaison(dataset, datatest, precision, separateur=','):
     fiabilite_1, temps_1 = classification_balltree(precision, dataset, datatest, separateur)
