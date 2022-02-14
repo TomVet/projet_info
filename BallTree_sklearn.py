@@ -4,8 +4,8 @@ import time
 import numpy as np
 from sklearn.neighbors import BallTree
 
-heart = 'C:/Users/felix/Downloads/Informatique/projet_info-main/projet_info-main/dataset_formater/heart.csv'
-heart_test = 'C:/Users/felix/Downloads/Informatique/projet_info-main/projet_info-main/dataset_formater/heart_test.csv'
+heart = 'dataset_formater/heart.csv'
+heart_test = 'dataset_formater/heart_test.csv'
 water_potability = 'dataset_formater/water_potability.csv'
 water_potability_test = 'dataset_formater/water_potability_test.csv'
 diabetes = 'dataset_formater/diabetes.csv'
