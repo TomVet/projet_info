@@ -2,7 +2,7 @@ from collections import Counter
 import csv
 import time
 import numpy as np
-from sklearn.neighbors import BallTree
+from sklearn.neighbors import KNeighborsClassifier
 
 heart = 'dataset_formater/heart.csv'
 heart_test = 'dataset_formater/heart_test.csv'
@@ -188,49 +188,46 @@ def classification_balltree(precision, dataset, datatest, separateur=','):
     temps = (end - start) * 1000
     return fiabilite, temps
 
-def ball_tree_sklearn(precison, listes):
-    clf = BallTree(listes)
-    indice = clf.query(listes, k=1, return_distance=False)
-    centroid_proche = liste_centroid[indice]
-    return centroid_proche
+def apprentissage_sklearn(fichier, separateur=','):
+    neigh = KNeighborsClassifier(algorithm = 'ball_tree')
+    dataset = recuperer_donnee_csv(fichier, separateur)
+    echantillon = []
+    cibles = []
+    for point in dataset:
+        echantillon.append(point[:-1])
+        cibles.append(point[-1])
+    echantillon = np.resize(echantillon, (len(cibles), len(dataset[1])-1))
+    neigh.fit(echantillon, cibles)
+    return neigh
 
-def prediction_sklearn(liste_de_listes, centroides):
-    centroide = ball_tree_sklearn(precision, liste)
-    classe = classe_liste(retrouver_liste(centroide, liste_de_listes , centroides))
-    return classe
-
-def classification_balltree_sklearn(precision, dataset, datatest, separateur=','):
-    start = time.time()
-    listes = ball_tree_sklearn(precision, recuperer_donnee_csv(dataset, separateur))
-    centroides = creer_liste_centroid(listes)
+def test_donnees_sklearn(fichier, neigh,  separateur):
+    datatest = recuperer_donnee_csv(fichier, separateur)
     nb_bon = 0
-    test_data = recuperer_donnee_csv(datatest, separateur=',')
-    nb_test = len(test_data)
-    for test in test_data:
-        if prediction_sklearn(listes, centroides) == test[-1]:
+    nb_test = len(datatest)
+    for point in datatest:
+        if neigh.predict([point[:-1]]) == point[-1]:
             nb_bon += 1
     fiabilite = nb_bon / nb_test * 100
+    return fiabilite
+
+def ball_tree_sklearn(dataset, datatest, separateur):
+    start = time.time()
+    neigh = apprentissage_sklearn(dataset, separateur)
+    fiabilite = test_donnees_sklearn(datatest, neigh, separateur)
     end = time.time()
     temps = (end - start) * 1000
     return fiabilite, temps
 
-from sklearn.neighbors import KNeighborsClassifier
-
-def ball_tree_sklearn(dataset, datatest, separateur=','):
-    neigh = KNeighborsClassifier(n_neighbors = len(dataset-1),algorithm = 'ball_tree') 
-    neigh.fit(dataset, y)
-    
-    print(neigh.predict(datatest)
 
 
 def comparaison(dataset, datatest, precision, separateur=','):
     fiabilite_1, temps_1 = classification_balltree(precision, dataset, datatest, separateur)
-    fiabilite_2, temps_2 = classification_balltree_sklearn(precision, dataset, datatest, separateur)
+    fiabilite_2, temps_2 = ball_tree_sklearn(dataset, datatest, separateur)
     print(f"Notre algorithme :\n\tPrécision : {fiabilite_1 :.2f} %\n\tTemps d'execution : \
 {temps_1 :.3f} ms\nAlgorithme du module :\n\tPrécision : {fiabilite_2 :.2f} %\n\tTemps \
 d'execution : {temps_2 :.3f} ms\n")
 
-comparaison(heart, heart_test, 5)
-comparaison(water_potability, water_potability_test, 5)
-comparaison(diabetes, diabetes_test, 5)
-comparaison(iris, iris_test, 5)
+comparaison(heart, heart_test, 10)
+comparaison(water_potability, water_potability_test, 10)
+comparaison(diabetes, diabetes_test, 10)
+comparaison(iris, iris_test, 10)
