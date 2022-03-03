@@ -96,6 +96,7 @@ def calcul_proba_categorie(points,point,categorie):
     borne=[]
     for i in range(11):
         if intervalle[i] <= point[categorie] <= intervalle[i+1]:
+            # la valeur du nouveau point doit appartenir à l'intervalle 
             borne.append(intervalle[i])
             borne.append(intervalle[i+1])
 # si la valeur du nouveau point appartient à l'intervalle étudié, alors les bornes de l'intervalle seront pris comme borne d'intégration
