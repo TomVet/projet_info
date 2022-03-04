@@ -390,6 +390,9 @@ def comparaison(dataset, datatest, separateur=","):
     Temps d'execution : {temps_2 :.3f} ms\n""")
 
 
+# ajouter nombre de classes différente pour comparé avec une classification
+# aléatoire.
+
 comparaison(HEART, HEART_TEST)
 comparaison(WATER_POTABILITY, WATER_POTABILITY_TEST)
 comparaison(DIABETES, DIABETES_TEST)
