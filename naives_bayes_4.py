@@ -78,9 +78,8 @@ def calcul_proba_bayes(point,points):
     for classe in classes:
         proba_classe = calcul_proba_classe(points)[int(classe-ecart)][0]
         #print(proba_classe)
-        proba_categorie = 1
         proba_categorie_sachant_classe = 1
         for i in range(len(points[0])-1):
             proba_categorie_sachant_classe = proba_categorie_sachant_classe*calcul_proba_categorie_sachant_classe(point,points,i,classe,ecart)
-        liste_proba.append([(proba_classe*proba_categorie_sachant_classe/proba_categorie),classe])
+        liste_proba.append([(proba_classe*proba_categorie_sachant_classe),classe])
     return liste_proba,max(liste_proba)[1]
