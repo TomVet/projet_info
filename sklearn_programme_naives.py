@@ -58,4 +58,5 @@ def proba_naives_sklearn(points,point):
     clf_pf = GaussianNB()
     clf_pf.partial_fit(X, Y, np.unique(Y))
     GaussianNB()
-    return clf_pf.predict_proba([point]),int(clf.predict([point]))
+    clf_pf.predict_proba([point])
+    int(clf.predict([point]))
