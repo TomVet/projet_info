@@ -272,9 +272,9 @@ def retrouver_liste(centroid_obtenu, liste_de_listes, liste_centroid):
 # on cherche le centroid le plus proche du nouveau point
 
 
-def centroide_plus_proche(liste_centroid, nouveau_point):
+def centroide_plus_proche(centroides, nouveau_point):
     """
-    Reste.
+    Optimisation temps et memoire possible.
 
     Parameters
     ----------
@@ -290,10 +290,10 @@ def centroide_plus_proche(liste_centroid, nouveau_point):
 
     """
     indice_centroid_proche = 0
-    centroid_proche = liste_centroid[indice_centroid_proche]
-    for indice in range(len(liste_centroid)):
-        point_1 = liste_centroid[indice_centroid_proche]
-        point_2 = liste_centroid[indice]
+    centroid_proche = centroides[indice_centroid_proche]
+    for indice in range(len(centroides)):
+        point_1 = centroides[indice_centroid_proche]
+        point_2 = centroides[indice]
         if (calcule_distance_euclidienne(point_1, nouveau_point) >
                 calcule_distance_euclidienne(point_2, nouveau_point)):
             indice_centroid_proche = indice
@@ -417,7 +417,7 @@ def comparaison(dataset, datatest, precision, separateur=','):
     Temps d'execution : {temps_2 :.3f} ms\n""")
 
 
-comparaison(heart, heart_test, 5)
-comparaison(water_potability, water_potability_test, 5)
-comparaison(diabetes, diabetes_test, 5)
-comparaison(iris, iris_test, 5)
+comparaison(heart, heart_test, 10)
+comparaison(water_potability, water_potability_test, 10)
+comparaison(diabetes, diabetes_test, 10)
+comparaison(iris, iris_test, 10)

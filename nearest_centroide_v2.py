@@ -10,20 +10,19 @@ import time
 import numpy as np
 from sklearn.neighbors import NearestCentroid
 
-HEART = "dataset_formater/heart.csv"
-HEART_TEST = "dataset_formater/heart_test.csv"
-WATER_POTABILITY = "dataset_formater/water_potability.csv"
-WATER_POTABILITY_TEST = "dataset_formater/water_potability_test.csv"
-DIABETES = "dataset_formater/diabetes.csv"
-DIABETES_TEST = "dataset_formater/diabetes_test.csv"
-IRIS = "dataset_formater/iris.csv"
-IRIS_TEST = "dataset_formater/iris_test.csv"
-WINEQT = "dataset_formater/wineQT.csv"
-WINEQT_TEST = "dataset_formater/wineQT_test.csv"
+HEART = ("Maladie cardiaque", "dataset_formater/heart.csv",
+         "dataset_formater/heart_test.csv")
+WATER_POTABILITY = ("Potabilité de l'eau",
+                    "dataset_formater/water_potability.csv",
+                    "dataset_formater/water_potability_test.csv")
+DIABETES = ("Diabète", "dataset_formater/diabetes.csv",
+            "dataset_formater/diabetes_test.csv")
+IRIS = ("Iris", "dataset_formater/iris.csv", "dataset_formater/iris_test.csv")
 
-# On crée les fonctions necessaire à la réalisation d'un algorithme de
-# classification centroide le plus proche
 
+# Définition des fonctions pour faire un algorithme de classification centroide
+# le plus proche .
+# _____________________________________________________________________________
 
 def calcul_coordonnees_centroide(liste_coordonne):
     """
@@ -253,11 +252,13 @@ def centroide_plus_proche(dataset, datatest, separateur=","):
     fiabilite = nb_bon / nb_test * 100
     end = time.time()
     temps = (end - start) * 1000
-    return fiabilite, temps
+    return fiabilite, temps, classes
 
 
-# on crée les fonction pour comparer l'algorithme que l'on a fait
-# avec celui d'une bibliothèque
+# Définition des fonctions pour utilisée l'algorithme nearest centroide de
+# sklear.
+# _____________________________________________________________________________
+
 
 def apprentissage(fichier, clf, separateur=","):
     """
@@ -343,7 +344,7 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
     fiabilite : float
         précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
-        temps d'éxecution de la fonction en milliseconde
+        temps d'éxecution de la fonction en milliseconde.
 
     """
     start = time.time()
@@ -355,24 +356,22 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
     return fiabilite, temps
 
 
-def comparaison(dataset, datatest, separateur=","):
+def comparaison(donnee, separateur=","):
     """
     Compare notre algorithme et celui de scikit-learn.
 
     Parameters
     ----------
-    dataset : np.array
-        chemin du fichier csv avec les données d'entrainement
-        ce fichier ne doit contenir que des float.
-    datatest : np.array
-        chemin du fichier csv avec les données de test
-        ce fichier ne doit contenir que des float.
+    donnee : tuple
+        tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
         The default is ",".
 
     Print
     -------
+    Dataset :
+    Nombre de classe :
     Notre algorithme :
         Précision : 0.00 %
         Temps d'execution : 0.000 ms
@@ -381,20 +380,21 @@ def comparaison(dataset, datatest, separateur=","):
         Temps d'execution : 0.000 ms
 
     """
-    fiabilite_1, temps_1 = centroide_plus_proche(dataset, datatest, separateur)
+    nom, dataset, datatest = donnee
+    fiabilite_1, temps_1, nb_classe = centroide_plus_proche(dataset, datatest,
+                                                            separateur)
     fiabilite_2, temps_2 = centroide_plus_proche_sklearn(dataset, datatest,
                                                          separateur)
-    print(f"""Notre algorithme :\n\tPrécision : {fiabilite_1 :.2f} %
-    Temps d'execution : {temps_1 :.3f} ms\nAlgorithme du module :
-    Précision : {fiabilite_2 :.2f} %
-    Temps d'execution : {temps_2 :.3f} ms\n""")
+    nb_classe = len(nb_classe)
+    print(f"""Dataset : {nom}\nNombre de classe : {nb_classe :.0f}
+    Notre algorithme :\n\tPrécision : {fiabilite_1 :.2f} %
+    \tTemps d'execution : {temps_1 :.3f} ms\n\tAlgorithme du module :
+    \tPrécision : {fiabilite_2 :.2f} %
+    \tTemps d'execution : {temps_2 :.3f} ms\n""")
 
 
-# ajouter nombre de classes différente pour comparé avec une classification
-# aléatoire.
-
-comparaison(HEART, HEART_TEST)
-comparaison(WATER_POTABILITY, WATER_POTABILITY_TEST)
-comparaison(DIABETES, DIABETES_TEST)
-comparaison(IRIS, IRIS_TEST)
-comparaison(WINEQT, WINEQT_TEST)
+# print("Nearest centroide :\n_________________________________________________")
+# comparaison(HEART)
+# comparaison(WATER_POTABILITY)
+# comparaison(DIABETES)
+# comparaison(IRIS)
