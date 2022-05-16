@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 19 12:03:56 2021.
 
-@author: TomDION
-"""
 
 import csv
 import time
@@ -124,7 +120,7 @@ def recuperer_donnee_csv(fichier, separateur=","):
         ce fichier ne doit contenir que des float.
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Returns
     -------
@@ -153,7 +149,7 @@ def calcul_centroides(fichier, separateur=","):
         ce fichier ne doit contenir que des float.
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Returns
     -------
@@ -196,7 +192,7 @@ def tester_data(fichier, centroides, nb_parametres, classes, separateur=","):
         set des classes du dataset
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Returns
     -------
@@ -235,14 +231,14 @@ def centroide_plus_proche(dataset, datatest, separateur=","):
         ce fichier ne doit contenir que des float.
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Returns
     -------
     fiabilite : float
         précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
-        temps d'éxecution de la fonction en milliseconde
+        temps pour classer un point en milliseconde.
 
     """
     start = time.time()
@@ -251,7 +247,7 @@ def centroide_plus_proche(dataset, datatest, separateur=","):
                                   classes, separateur)
     fiabilite = nb_bon / nb_test * 100
     end = time.time()
-    temps = (end - start) * 1000
+    temps = (end - start) * 1000 / nb_test
     return fiabilite, temps, classes
 
 
@@ -274,7 +270,7 @@ def apprentissage(fichier, clf, separateur=","):
         ici NearestCentroid().
     separateur : string, optional
         string contenant le separateur utiliser dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Returns
     -------
@@ -305,12 +301,14 @@ def test_donnees(fichier, clf, separateur=","):
         ici NearestCentroid().
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Returns
     -------
     fiabilite : float
         précision de l'algorithme sur cet ensemble de données (en pourcentage).
+    nb_test : int
+        nombre de test éffectué pour calculer la fiabilité
 
     """
     datatest = recuperer_donnee_csv(fichier, separateur)
@@ -320,7 +318,7 @@ def test_donnees(fichier, clf, separateur=","):
         if clf.predict([point[:-1]]) == point[-1]:
             nb_bon += 1
     fiabilite = nb_bon / nb_test * 100
-    return fiabilite
+    return fiabilite, nb_test
 
 
 def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
@@ -337,22 +335,22 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
         ce fichier ne doit contenir que des float.
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Returns
     -------
     fiabilite : float
         précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
-        temps d'éxecution de la fonction en milliseconde.
+        temps pour classer un point en milliseconde.
 
     """
     start = time.time()
     clf = NearestCentroid()
     apprentissage(dataset, clf, separateur)
-    fiabilite = test_donnees(datatest, clf, separateur)
+    fiabilite, nb_test = test_donnees(datatest, clf, separateur)
     end = time.time()
-    temps = (end - start) * 1000
+    temps = (end - start) * 1000 / nb_test
     return fiabilite, temps
 
 
@@ -366,7 +364,7 @@ def comparaison(donnee, separateur=","):
         tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Print
     -------
