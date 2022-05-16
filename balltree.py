@@ -42,6 +42,22 @@ def trouver_coordonnees_centroide(points):
 
 
 def separe_liste(points):
+    """
+
+
+    Parameters
+    ----------
+    points : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    points_1 : TYPE
+        DESCRIPTION.
+    points_2 : TYPE
+        DESCRIPTION.
+
+    """
     centroide = trouver_coordonnees_centroide(points)
     distances = []
     for point in points:
@@ -62,6 +78,22 @@ def separe_liste(points):
 
 
 def ball_tree(dataset, profondeur):
+    """
+
+
+    Parameters
+    ----------
+    dataset : TYPE
+        DESCRIPTION.
+    profondeur : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    listes : TYPE
+        DESCRIPTION.
+
+    """
     listes = separe_liste(dataset)
     for _ in range(profondeur - 1):
         nouvelle_listes = []
@@ -99,6 +131,22 @@ def classe_liste(points):
 
 
 def centroide_classe_liste(listes):
+    """
+
+
+    Parameters
+    ----------
+    listes : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    centroides : TYPE
+        DESCRIPTION.
+    classes : TYPE
+        DESCRIPTION.
+
+    """
     centroides = []
     classes = []
     for ind, points in enumerate(listes):
@@ -107,6 +155,24 @@ def centroide_classe_liste(listes):
     return centroides, classes
 
 def prediction(point, centroides, classes):
+    """
+
+
+    Parameters
+    ----------
+    point : TYPE
+        DESCRIPTION.
+    centroides : TYPE
+        DESCRIPTION.
+    classes : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    """
     dist_min = n.calcul_distance_euclidienne(centroides[0][:-1], point[:-1])
     centroide_min = centroides[0]
     for centroide in centroides:
@@ -130,7 +196,7 @@ def classification_balltree(precision, dataset, datatest, separateur=','):
     datatest : TYPE
         DESCRIPTION.
     separateur : TYPE, optional
-        DESCRIPTION. The default is ','.
+        DESCRIPTION. La valeur par défaut est ','.
 
     Returns
     -------
@@ -165,7 +231,7 @@ def comparaison(donnee, precision, separateur=","):
         tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
     separateur : string, optional
         string contenant le séparateur utilisé dans fichier.
-        The default is ",".
+        La valeur par défaut est ",".
 
     Print
     -------
@@ -190,7 +256,7 @@ def comparaison(donnee, precision, separateur=","):
     \tPrécision : {fiabilite_2 :.2f} %
     \tTemps d'execution : {temps_2 :.3f} ms\n""")
 
-comparaison(n.HEART, 10)
-comparaison(n.WATER_POTABILITY, 10)
-comparaison(n.DIABETES, 10)
-comparaison(n.IRIS, 5)
+comparaison(n.HEART, 7)
+comparaison(n.WATER_POTABILITY, 30)
+comparaison(n.DIABETES, 30)
+comparaison(n.IRIS, 30)
