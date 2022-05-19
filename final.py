@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+"""
+Fais .
+
+test
+"""
 
 import csv
 import time
+from collections import Counter
+import sys
 import numpy as np
 from sklearn.neighbors import NearestCentroid
-from collections import Counter
+from sklearn.neighbors import KNeighborsClassifier
 
 HEART = ("Maladie cardiaque", "dataset_formater/heart.csv",
          "dataset_formater/heart_test.csv")
@@ -16,37 +23,37 @@ DIABETES = ("Diabète", "dataset_formater/diabetes.csv",
 IRIS = ("Iris", "dataset_formater/iris.csv", "dataset_formater/iris_test.csv")
 
 
-# Définition des fonctions pour faire un algorithme de classification centroide
-# le plus proche .
+# Définition de fonction utile pour les 3 algorithmes
 # _____________________________________________________________________________
 
-def calcul_coordonnees_centroide(liste_coordonne):
+
+def recuperer_donnee_csv(fichier, separateur=","):
     """
-    Calcule le centroide des points de liste_coordonne de dimension.
+    Créée une liste de liste contenant les données de fichier.
 
     Parameters
     ----------
-    liste_coordonne : list
-        liste de coordonnée de point de même dimension.
+    fichier : string
+        chemin du fichier csv a lire
+        ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        string contenant le séparateur utilisé dans fichier.
+        La valeur par défaut est ",".
 
     Returns
     -------
-    coordonnees : list
-        liste des coordonnée du centroide calculé.
+    data : np.array
+        array de dimension 2.
 
     """
-    coordonnees = []
-    # on calcule la dimension de l'espace considéré pour le centroide
-    nb_dimension = len(liste_coordonne[0])
-    # on calcule les coordonnées du centroide dans chaque dimension
-    for dimension in range(nb_dimension):
-        somme = 0
-        # on somme les coordonnées de chaque points
-        for point in liste_coordonne:
-            somme += point[dimension]
-        # on ajoute la somme / par le nombre de point a coordonnées
-        coordonnees = np.append(coordonnees, somme/len(liste_coordonne))
-    return coordonnees
+    with open(fichier, newline="", encoding="utf-8") as data_file:
+        data = []
+        data_reader = csv.reader(data_file, delimiter=separateur)
+        for ligne in data_reader:
+            data.append(ligne)
+        data = np.array(data)
+        data = data.astype(np.float64)
+        return data
 
 
 def calcul_distance_euclidienne(point_1, point_2):
@@ -75,6 +82,42 @@ def calcul_distance_euclidienne(point_1, point_2):
         somme = (point_1[dimension] - point_2[dimension]) ** 2
         distance += somme
     return distance
+
+
+def calcul_coordonnees_centroide(points):
+    """
+    Calcule le centroide des points de liste_points de dimension.
+
+    Parameters
+    ----------
+    points : list
+        liste de coordonnée de point de même dimension.
+
+    Returns
+    -------
+    centroide : list
+        liste des coordonnée du centroide calculé.
+
+    """
+    centroide = []
+    # on calcule la dimension de l'espace considéré pour le centroide
+    # print('test')
+    # print(points)
+    nb_dimension = len(points[0])
+    # on calcule les coordonnées du centroide dans chaque dimension
+    for dimension in range(nb_dimension):
+        somme = 0
+        # on somme les coordonnées de chaque points
+        for point in points:
+            somme += point[dimension]
+        # on ajoute la somme / par le nombre de point a coordonnées
+        centroide.append(somme/len(points))
+    return centroide
+
+
+# Définition des fonctions pour faire un algorithme de classification centroide
+# le plus proche .
+# _____________________________________________________________________________
 
 
 def find_nearest_centroid(point, centroides):
@@ -107,35 +150,6 @@ def find_nearest_centroid(point, centroides):
             # on conserve la classe du centroide le plus proche
             classe_du_min = classe
     return classe_du_min
-
-
-def recuperer_donnee_csv(fichier, separateur=","):
-    """
-    Créée une liste de liste contenant les données de fichier.
-
-    Parameters
-    ----------
-    fichier : string
-        chemin du fichier csv a lire
-        ce fichier ne doit contenir que des float.
-    separateur : string, optional
-        string contenant le séparateur utilisé dans fichier.
-        La valeur par défaut est ",".
-
-    Returns
-    -------
-    data : np.array
-        array de dimension 2.
-
-    """
-    with open(fichier, newline="", encoding="utf-8") as data_file:
-        data = []
-        data_reader = csv.reader(data_file, delimiter=separateur)
-        for ligne in data_reader:
-            data.append(ligne)
-        data = np.array(data)
-        data = data.astype(np.float64)
-        return data
 
 
 def calcul_centroides(fichier, separateur=","):
@@ -354,7 +368,7 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
     return fiabilite, temps
 
 
-def comparaison(donnee, separateur=","):
+def comparaison_nearest_centroide(donnee, separateur=","):
     """
     Compare notre algorithme et celui de scikit-learn.
 
@@ -392,65 +406,38 @@ def comparaison(donnee, separateur=","):
 
 
 print("Nearest centroide :\n_________________________________________________")
-comparaison(HEART)
-comparaison(WATER_POTABILITY)
-comparaison(DIABETES)
-comparaison(IRIS)
-
-#______________________________________________________________________________
-
-# Définition des fonctions pour faire un algorithme de classification Balltree
+comparaison_nearest_centroide(HEART)
+comparaison_nearest_centroide(WATER_POTABILITY)
+comparaison_nearest_centroide(DIABETES)
+comparaison_nearest_centroide(IRIS)
 
 
-def trouver_coordonnees_centroide(points):
+# _____________________________________________________________________________
+# Définition des fonctions pour faire un algorithme de classification Balltree.
+# _____________________________________________________________________________
+
+def separe_liste(points):
     """
-    Calcule le centroide des points de liste_points de dimension.
+    Sépare la liste de point en 2 sous listes.
+
+    Calcul le centroide de points et trouve les 2 points les plus éloigné du
+    centroide. Puis sépare les points en fonction de leurs distance au 2 points
+    les plus éloigné du centroide.
 
     Parameters
     ----------
     points : list
-        liste de coordonnée de point de même dimension.
+        liste à séparer.
 
     Returns
     -------
-    centroide : list
-        liste des coordonnée du centroide calculé.
+    points_1 : list
+        1 er sous liste.
+    points_2 : list
+        2eme sous liste.
 
     """
-    centroide = []
-    # on calcule la dimension de l'espace considéré pour le centroide
-    # print('test')
-    # print(points)
-    nb_dimension = len(points[0])
-    # on calcule les coordonnées du centroide dans chaque dimension
-    for dimension in range(nb_dimension):
-        somme = 0
-        # on somme les coordonnées de chaque points
-        for point in points:
-            somme += point[dimension]
-        # on ajoute la somme / par le nombre de point a coordonnées
-        centroide.append(somme/len(points))
-    return centroide
-
-
-def separe_liste(points):
-    """
-
-
-    Parameters
-    ----------
-    points : TYPE
-        DESCRIPTION.
-
-    Returns
-    -------
-    points_1 : TYPE
-        DESCRIPTION.
-    points_2 : TYPE
-        DESCRIPTION.
-
-    """
-    centroide = trouver_coordonnees_centroide(points)
+    centroide = calcul_coordonnees_centroide(points)
     distances = []
     for point in points:
         distances.append(calcul_distance_euclidienne(point[:-1], centroide))
@@ -471,19 +458,19 @@ def separe_liste(points):
 
 def ball_tree(dataset, profondeur):
     """
-
+    Compartimente dataset selon l'algorithme BallTree.
 
     Parameters
     ----------
-    dataset : TYPE
-        DESCRIPTION.
-    profondeur : TYPE
-        DESCRIPTION.
+    dataset : list
+        Liste de points à séparer.
+    profondeur : int
+        Nombre de fois que la liste de départ est séparé.
 
     Returns
     -------
-    listes : TYPE
-        DESCRIPTION.
+    listes : list
+        liste de listes créé à partir de dataset selon l'algorithme BallTree.
 
     """
     listes = separe_liste(dataset)
@@ -502,60 +489,64 @@ def ball_tree(dataset, profondeur):
 
 def classe_liste(points):
     """
-    Reste.
+    Renvoie la classe la plus représenté dans la liste points.
 
     Parameters
     ----------
-    points : TYPE
-        DESCRIPTION.
+    points : list
+        Liste de point pour laquelle il faut déterminer la classe.
 
     Returns
     -------
-    TYPE
-        DESCRIPTION.
+    classe : int
+        classe la plus représenter dans la liste points.
 
     """
     classes = []
     for point in points:
         classes.append(point[-1])
     classe = Counter(classes).most_common(1)
-    return classe[0][0]
+    classe = classe[0][0]
+    return classe
 
 
 def centroide_classe_liste(listes):
     """
-
+    Calcul les centroides et classes des listes de listes.
 
     Parameters
     ----------
-    listes : TYPE
-        DESCRIPTION.
+    listes : listes
+        liste des listes de points pour lesquelle on veut déterminer la classe
+        et le centroide.
 
     Returns
     -------
-    centroides : TYPE
-        DESCRIPTION.
-    classes : TYPE
-        DESCRIPTION.
+    centroides : list
+        Liste des coordonnées des centroides des listes de listes rangée dans le
+        même ordre.
+    classes : list
+        Liste des classes des listes de listes rangée dans le même ordre.
 
     """
     centroides = []
     classes = []
-    for ind, points in enumerate(listes):
-        centroides.append(trouver_coordonnees_centroide(points))
+    for points in listes:
+        centroides.append(calcul_coordonnees_centroide(points))
         classes.append(classe_liste(points))
     return centroides, classes
 
+
 def prediction(point, centroides, classes):
     """
-
+    Recherche le centroides le plus proche du point et renvoie sa classe.
 
     Parameters
     ----------
-    point : TYPE
-        DESCRIPTION.
-    centroides : TYPE
-        DESCRIPTION.
+    point : list
+        Coordonnée du point pour lequelle on veux déterminé la classe.
+    centroides : list
+        Liste des centroides des sous .
     classes : TYPE
         DESCRIPTION.
 
@@ -613,7 +604,44 @@ def classification_balltree(precision, dataset, datatest, separateur=','):
     return fiabilite, temps
 
 
-def comparaison(donnee, precision, separateur=","):
+# Définition des fonctions pour utilisée l'algorithme ballTree de sklear.
+# _____________________________________________________________________________
+
+
+def apprentissage_sklearn(fichier, separateur=','):
+    neigh = KNeighborsClassifier(algorithm='ball_tree')
+    dataset = recuperer_donnee_csv(fichier, separateur)
+    echantillon = []
+    cibles = []
+    for point in dataset:
+        echantillon.append(point[:-1])
+        cibles.append(point[-1])
+    echantillon = np.resize(echantillon, (len(cibles), len(dataset[1])-1))
+    neigh.fit(echantillon, cibles)
+    return neigh
+
+
+def test_donnees_sklearn(fichier, neigh,  separateur):
+    datatest = recuperer_donnee_csv(fichier, separateur)
+    nb_bon = 0
+    nb_test = len(datatest)
+    for point in datatest:
+        if neigh.predict([point[:-1]]) == point[-1]:
+            nb_bon += 1
+    fiabilite = nb_bon / nb_test * 100
+    return fiabilite
+
+
+def ball_tree_sklearn(dataset, datatest, separateur=','):
+    start = time.time()
+    neigh = apprentissage_sklearn(dataset, separateur)
+    fiabilite = test_donnees_sklearn(datatest, neigh, separateur)
+    end = time.time()
+    temps = (end - start) * 1000
+    return fiabilite, temps
+
+
+def comparaison_balltree(donnee, precision, separateur=","):
     """
     Compare notre algorithme et celui de scikit-learn.
 
@@ -640,7 +668,7 @@ def comparaison(donnee, precision, separateur=","):
     nom, dataset, datatest = donnee
     fiabilite_1, temps_1 = classification_balltree(
         precision, dataset, datatest, separateur)
-    fiabilite_2, temps_2 = 1, 1
+    fiabilite_2, temps_2 = ball_tree_sklearn(dataset, datatest)
     nb_classe = 2
     print(f"""Dataset : {nom}\nNombre de classe : {nb_classe :.0f}
     Notre algorithme :\n\tPrécision : {fiabilite_1 :.2f} %
@@ -650,7 +678,7 @@ def comparaison(donnee, precision, separateur=","):
 
 
 print("Balltree :\n_________________________________________________")
-comparaison(HEART, 7)
-comparaison(WATER_POTABILITY, 30)
-comparaison(DIABETES, 30)
-comparaison(IRIS, 30)
+comparaison_balltree(HEART, 7)
+comparaison_balltree(WATER_POTABILITY, 30)
+comparaison_balltree(DIABETES, 30)
+comparaison_balltree(IRIS, 30)
