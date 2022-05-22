@@ -444,8 +444,11 @@ def separe_liste(points):
     distances_triee = sorted(distances)
     centre_1 = points[distances.index(distances_triee[-1])]
     centre_2 = points[distances.index(distances_triee[-2])]
-    points_1 = [centre_1]
-    points_2 = [centre_2]
+    if (set(centre_1) == set(centre_2)):
+        points.pop(distances.index(distances_triee[-1]))
+        return [centre_1], points
+    points_1 = []
+    points_2 = []
     for point in points:
         dist_1 = calcul_distance_euclidienne(centre_1[:-1], point[:-1])
         dist_2 = calcul_distance_euclidienne(centre_2[:-1], point[:-1])
@@ -523,8 +526,8 @@ def centroide_classe_liste(listes):
     Returns
     -------
     centroides : list
-        Liste des coordonnées des centroides des listes de listes rangée dans le
-        même ordre.
+        Liste des coordonnées des centroides des listes de listes rangée dans
+        le même ordre.
     classes : list
         Liste des classes des listes de listes rangée dans le même ordre.
 
@@ -675,6 +678,7 @@ def comparaison_balltree(donnee, precision, separateur=","):
     \tTemps d'execution : {temps_1 :.3f} ms\n\tAlgorithme du module :
     \tPrécision : {fiabilite_2 :.2f} %
     \tTemps d'execution : {temps_2 :.3f} ms\n""")
+
 
 
 print("Balltree :\n_________________________________________________")
