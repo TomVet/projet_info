@@ -444,7 +444,7 @@ def separe_liste(points):
     distances_triee = sorted(distances)
     centre_1 = points[distances.index(distances_triee[-1])]
     centre_2 = points[distances.index(distances_triee[-2])]
-    if (set(centre_1) == set(centre_2)):
+    if centre_1 == centre_2:
         points.pop(distances.index(distances_triee[-1]))
         return [centre_1], points
     points_1 = []
