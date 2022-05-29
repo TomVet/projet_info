@@ -8,7 +8,6 @@ test
 import csv
 import time
 from collections import Counter
-import sys
 import numpy as np
 from sklearn.neighbors import NearestCentroid
 from sklearn.neighbors import KNeighborsClassifier
@@ -175,6 +174,7 @@ def calcul_centroides(fichier, separateur=","):
         set des classes du dataset
 
     """
+    start = time.time()
     dataset = recuperer_donnee_csv(fichier, separateur)
     nb_parametres = len(dataset[1]) - 1
     centroides = []
@@ -186,7 +186,9 @@ def calcul_centroides(fichier, separateur=","):
                 liste_classe.append(point[:nb_parametres])
         centroide = classe, calcul_coordonnees_centroide(liste_classe)
         centroides.append(centroide)
-    return centroides, nb_parametres, classes
+    end = time.time()
+    temps = (end - start) * 1000
+    return centroides, nb_parametres, classes, temps
 
 
 def tester_data(fichier, centroides, nb_parametres, classes, separateur=","):
@@ -256,13 +258,14 @@ def centroide_plus_proche(dataset, datatest, separateur=","):
 
     """
     start = time.time()
-    centroides, nb_parametres, classes = calcul_centroides(dataset, separateur)
+    centroides, nb_parametres, classes, tps_app = calcul_centroides(dataset,
+                                                                    separateur)
     nb_test, nb_bon = tester_data(datatest, centroides, nb_parametres,
                                   classes, separateur)
     fiabilite = nb_bon / nb_test * 100
     end = time.time()
     temps = (end - start) * 1000 / nb_test
-    return fiabilite, temps, classes
+    return fiabilite, temps, classes, tps_app
 
 
 # Définition des fonctions pour utilisée l'algorithme nearest centroide de
@@ -291,6 +294,7 @@ def apprentissage(fichier, clf, separateur=","):
     None.
 
     """
+    start = time.time()
     dataset = recuperer_donnee_csv(fichier, separateur)
     echantillon = []
     cibles = []
@@ -299,6 +303,9 @@ def apprentissage(fichier, clf, separateur=","):
         cibles.append(point[-1])
     echantillon = np.resize(echantillon, (len(cibles), len(dataset[1])-1))
     clf.fit(echantillon, cibles)
+    end = time.time()
+    temps_app = (end-start) * 1000
+    return temps_app
 
 
 def test_donnees(fichier, clf, separateur=","):
@@ -361,55 +368,55 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
     """
     start = time.time()
     clf = NearestCentroid()
-    apprentissage(dataset, clf, separateur)
+    temps_app = apprentissage(dataset, clf, separateur)
     fiabilite, nb_test = test_donnees(datatest, clf, separateur)
     end = time.time()
     temps = (end - start) * 1000 / nb_test
-    return fiabilite, temps
+    return fiabilite, temps, temps_app
 
 
-def comparaison_nearest_centroide(donnee, separateur=","):
-    """
-    Compare notre algorithme et celui de scikit-learn.
+# def comparaison_nearest_centroide(donnee, separateur=","):
+#     """
+#     Compare notre algorithme et celui de scikit-learn.
 
-    Parameters
-    ----------
-    donnee : tuple
-        tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
-    separateur : string, optional
-        string contenant le séparateur utilisé dans fichier.
-        La valeur par défaut est ",".
+#     Parameters
+#     ----------
+#     donnee : tuple
+#         tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
+#     separateur : string, optional
+#         string contenant le séparateur utilisé dans fichier.
+#         La valeur par défaut est ",".
 
-    Print
-    -------
-    Dataset :
-    Nombre de classe :
-    Notre algorithme :
-        Précision : 0.00 %
-        Temps d'execution : 0.000 ms
-    Algorithme du module :
-        Précision : 0.00 %
-        Temps d'execution : 0.000 ms
+#     Print
+#     -------
+#     Dataset :
+#     Nombre de classe :
+#     Notre algorithme :
+#         Précision : 0.00 %
+#         Temps d'execution : 0.000 ms
+#     Algorithme du module :
+#         Précision : 0.00 %
+#         Temps d'execution : 0.000 ms
 
-    """
-    nom, dataset, datatest = donnee
-    fiabilite_1, temps_1, nb_classe = centroide_plus_proche(dataset, datatest,
-                                                            separateur)
-    fiabilite_2, temps_2 = centroide_plus_proche_sklearn(dataset, datatest,
-                                                         separateur)
-    nb_classe = len(nb_classe)
-    print(f"""Dataset : {nom}\nNombre de classe : {nb_classe :.0f}
-    Notre algorithme :\n\tPrécision : {fiabilite_1 :.2f} %
-    \tTemps d'execution : {temps_1 :.3f} ms\n\tAlgorithme du module :
-    \tPrécision : {fiabilite_2 :.2f} %
-    \tTemps d'execution : {temps_2 :.3f} ms\n""")
+#     """
+#     nom, dataset, datatest = donnee
+#     fiabilite_1, temps_1, classes = centroide_plus_proche(dataset, datatest,
+#                                                           separateur)
+#     fiabilite_2, temps_2 = centroide_plus_proche_sklearn(dataset, datatest,
+#                                                          separateur)
+#     nb_classe = len(classes)
+#     print(f"""Dataset : {nom}\nNombre de classe : {nb_classe :.0f}
+#     Notre algorithme :\n\t\tPrécision : {fiabilite_1 :.2f} %
+#     \tTemps d'execution : {temps_1 :.3f} ms\n\tAlgorithme du module :
+#     \tPrécision : {fiabilite_2 :.2f} %
+#     \tTemps d'execution : {temps_2 :.3f} ms\n""")
 
 
-print("Nearest centroide :\n_________________________________________________")
-comparaison_nearest_centroide(HEART)
-comparaison_nearest_centroide(WATER_POTABILITY)
-comparaison_nearest_centroide(DIABETES)
-comparaison_nearest_centroide(IRIS)
+# print("Nearest centroide :\n_________________________________________________")
+# comparaison_nearest_centroide(HEART)
+# comparaison_nearest_centroide(WATER_POTABILITY)
+# comparaison_nearest_centroide(DIABETES)
+# comparaison_nearest_centroide(IRIS)
 
 
 # _____________________________________________________________________________
@@ -437,25 +444,33 @@ def separe_liste(points):
         2eme sous liste.
 
     """
-    centroide = calcul_coordonnees_centroide(points)
-    distances = []
-    for point in points:
-        distances.append(calcul_distance_euclidienne(point[:-1], centroide))
-    distances_triee = sorted(distances)
-    centre_1 = points[distances.index(distances_triee[-1])]
-    centre_2 = points[distances.index(distances_triee[-2])]
-    if centre_1 == centre_2:
-        points.pop(distances.index(distances_triee[-1]))
-        return [centre_1], points
-    points_1 = []
-    points_2 = []
-    for point in points:
-        dist_1 = calcul_distance_euclidienne(centre_1[:-1], point[:-1])
-        dist_2 = calcul_distance_euclidienne(centre_2[:-1], point[:-1])
-        if dist_1 < dist_2:
-            points_1.append(point)
-        else:
-            points_2.append(point)
+    if len(points) == 2:
+        points_1 = [points[0]]
+        points_2 = [points[1]]
+    else:
+        centroide = calcul_coordonnees_centroide(points)
+        distances = []
+        for point in points:
+            distances.append(
+                calcul_distance_euclidienne(point[:-1], centroide))
+        distances_triee = sorted(distances)
+        centre_1 = points[distances.index(distances_triee[-1])]
+        centre_2 = points[distances.index(distances_triee[-2])]
+        n = -3
+        while np.array_equal(centre_1, centre_2):
+            centre_2 = points[distances.index(distances_triee[n])]
+            n -= 1
+            if n == - len(points):
+                return points
+        points_1 = []
+        points_2 = []
+        for point in points:
+            dist_1 = calcul_distance_euclidienne(centre_1[:-1], point[:-1])
+            dist_2 = calcul_distance_euclidienne(centre_2[:-1], point[:-1])
+            if dist_1 < dist_2:
+                points_1.append(point)
+            else:
+                points_2.append(point)
     return points_1, points_2
 
 
@@ -595,6 +610,7 @@ def classification_balltree(precision, dataset, datatest, separateur=','):
     start = time.time()
     listes = ball_tree(recuperer_donnee_csv(dataset, separateur), precision)
     centroides, classes = centroide_classe_liste(listes)
+    end_1 = time.time()
     nb_bon = 0
     test_data = recuperer_donnee_csv(datatest, separateur=',')
     nb_test = len(test_data)
@@ -602,16 +618,32 @@ def classification_balltree(precision, dataset, datatest, separateur=','):
         if prediction(test, centroides, classes) == test[-1]:
             nb_bon += 1
     fiabilite = nb_bon / nb_test * 100
-    end = time.time()
-    temps = (end - start) * 1000
-    return fiabilite, temps
-
+    end_2 = time.time()
+    temps_app = (end_1 - start) * 1000
+    temps = (end_2 - start) * 1000 / nb_test
+    return fiabilite, temps, temps_app
 
 # Définition des fonctions pour utilisée l'algorithme ballTree de sklear.
 # _____________________________________________________________________________
 
 
 def apprentissage_sklearn(fichier, separateur=','):
+    """
+
+
+    Parameters
+    ----------
+    fichier : TYPE
+        DESCRIPTION.
+    separateur : TYPE, optional
+        DESCRIPTION. The default is ','.
+
+    Returns
+    -------
+    neigh : TYPE
+        DESCRIPTION.
+
+    """
     neigh = KNeighborsClassifier(algorithm='ball_tree')
     dataset = recuperer_donnee_csv(fichier, separateur)
     echantillon = []
@@ -632,57 +664,88 @@ def test_donnees_sklearn(fichier, neigh,  separateur):
         if neigh.predict([point[:-1]]) == point[-1]:
             nb_bon += 1
     fiabilite = nb_bon / nb_test * 100
-    return fiabilite
+    return fiabilite, nb_test
 
 
 def ball_tree_sklearn(dataset, datatest, separateur=','):
     start = time.time()
     neigh = apprentissage_sklearn(dataset, separateur)
-    fiabilite = test_donnees_sklearn(datatest, neigh, separateur)
-    end = time.time()
-    temps = (end - start) * 1000
-    return fiabilite, temps
+    end_1 = time.time()
+    fiabilite, nb_test = test_donnees_sklearn(datatest, neigh, separateur)
+    end_2 = time.time()
+    temps_app = (end_1 - start) * 1000
+    temps = (end_2 - start) * 1000 / nb_test
+    return fiabilite, temps, temps_app
 
 
-def comparaison_balltree(donnee, precision, separateur=","):
-    """
-    Compare notre algorithme et celui de scikit-learn.
+# def comparaison_balltree(donnee, precision, separateur=","):
+#     """
+#     Compare notre algorithme et celui de scikit-learn.
 
-    Parameters
-    ----------
-    donnee : tuple
-        tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
-    separateur : string, optional
-        string contenant le séparateur utilisé dans fichier.
-        La valeur par défaut est ",".
+#     Parameters
+#     ----------
+#     donnee : tuple
+#         tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
+#     separateur : string, optional
+#         string contenant le séparateur utilisé dans fichier.
+#         La valeur par défaut est ",".
 
-    Print
-    -------
-    Dataset :
-    Nombre de classe :
-    Notre algorithme :
-        Précision : 0.00 %
-        Temps d'execution : 0.000 ms
-    Algorithme du module :
-        Précision : 0.00 %
-        Temps d'execution : 0.000 ms
+#     Print
+#     -------
+#     Dataset :
+#     Nombre de classe :
+#     Notre algorithme :
+#         Précision : 0.00 %
+#         Temps d'execution : 0.000 ms
+#     Algorithme du module :
+#         Précision : 0.00 %
+#         Temps d'execution : 0.000 ms
 
-    """
+#     """
+#     nom, dataset, datatest = donnee
+#     fiabilite_1, temps_1 = classification_balltree(precision, dataset,
+#                                                    datatest, separateur)
+#     fiabilite_2, temps_2 = ball_tree_sklearn(dataset, datatest)
+#     print(f"""Dataset : {nom}\nNombre de classe : {nb_classe :.0f}
+#     Notre algorithme :\n\t\tPrécision : {fiabilite_1 :.2f} %
+#     \tTemps d'execution : {temps_1 :.3f} ms\n\tAlgorithme du module :
+#     \tPrécision : {fiabilite_2 :.2f} %
+#     \tTemps d'execution : {temps_2 :.3f} ms\n""")
+
+
+# print("Balltree :\n_________________________________________________")
+# comparaison_balltree(HEART, 7)
+# comparaison_balltree(WATER_POTABILITY, 30)
+# comparaison_balltree(DIABETES, 30)
+# comparaison_balltree(IRIS, 30)
+
+
+def comparaison(donnee, precision, separateur=','):
     nom, dataset, datatest = donnee
-    fiabilite_1, temps_1 = classification_balltree(
+    fiabilite_1, tps_point_1, classes, tps_app_1 = centroide_plus_proche(
+        dataset, datatest, separateur)
+    fiabilite_2, tps_point_2, tps_app_2 = centroide_plus_proche_sklearn(
+        dataset, datatest, separateur)
+    nb_classe = len(classes)
+    fiabilite_3, tps_point_3, tps_app_3 = classification_balltree(
         precision, dataset, datatest, separateur)
-    fiabilite_2, temps_2 = ball_tree_sklearn(dataset, datatest)
-    nb_classe = 2
-    print(f"""Dataset : {nom}\nNombre de classe : {nb_classe :.0f}
-    Notre algorithme :\n\tPrécision : {fiabilite_1 :.2f} %
-    \tTemps d'execution : {temps_1 :.3f} ms\n\tAlgorithme du module :
-    \tPrécision : {fiabilite_2 :.2f} %
-    \tTemps d'execution : {temps_2 :.3f} ms\n""")
+    fiabilite_4, tps_point_4, tps_app_4 = ball_tree_sklearn(
+        dataset, datatest)
+    textes = [(fiabilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
+               tps_app_2, '\tNearest centroide :'),
+              (fiabilite_3, tps_point_3, tps_app_3, fiabilite_4, tps_point_4,
+               tps_app_4, '\tBalltree :'),
+              (fiabilite_5, tps_point_5, tps_app_5, fiabilite_6, tps_point_6,
+               tps_app_6, '\tNaives Bayes :')]
+    print(f"""---------------------------------------\nDataset : {nom}
+Nombre de classe : {nb_classe :.0f}""")
+    for text in textes:
 
-
-
-print("Balltree :\n_________________________________________________")
-comparaison_balltree(HEART, 7)
-comparaison_balltree(WATER_POTABILITY, 30)
-comparaison_balltree(DIABETES, 30)
-comparaison_balltree(IRIS, 30)
+        print(text)
+        print(f"""\t\tNotre algorithme :\n\t\t\tPrécision : {fiabilite_1 :.2f} %
+        \tTemps apprentissage : {tps_app_1 :.2f} ms
+        \tTemps classement d'un point : {tps_point_1 :.2f} ms\n\n\t\tSklearn :
+        \tPrécision : {fiabilite_2 :.2f} %
+        \tTemps apprentissage : {tps_app_2 :.2f} ms
+        \tTemps classement d'un point : {tps_point_2 :.2f} ms""")
+    print('---------------------------------------')
