@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon May 23 17:08:36 2022
+
+@author: fireb
+"""
+
+fonction test():
+
+commentaire:
+    debut:
+        explication
+        module a avoir
+        version python
+        objectif presentation
+        appel fonction test
+    debut de fonction:
+        docstring
+    dans code:
+        pas de commentaire trivial
+        repondre a la question pourquoi et pas quoi
+
+mise en forme:
+    bien preseter
+    utiliser black == linter ou autre linter et suivre PEP
+    renomer variable
+    nom fonction verbe infinitif
+    liste nom objet avec s
+    variable nom explicite
+
+mettre import au debut

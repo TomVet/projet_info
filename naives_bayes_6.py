@@ -288,7 +288,7 @@ def calcul_constante(points, ecart, point, esp, var):
 
 def calcul_proba_bayes(point, points):
     """
-    
+
 
     Parameters
     ----------
@@ -347,10 +347,10 @@ def comparateur(liste_test, dataset):
     """
     classes = liste_classe(liste_test)
     points = liste_donnes(liste_test)
-    temps_1 = 0 # temps de sk_learn
-    temps_2 = 0 # temps de calcul_proba_bayes
-    succes_1 = 0 # succes de sk_learn
-    succes_2 = 0 # succes de calcul_proba_bayes
+    temps_1 = 0  # temps de sk_learn
+    temps_2 = 0  # temps de calcul_proba_bayes
+    succes_1 = 0  # succes de sk_learn
+    succes_2 = 0  # succes de calcul_proba_bayes
     taille = len(liste_test)
     for i in range(len(liste_test)):
         Liste = proba_naives_sklearn([points[i]], dataset)
