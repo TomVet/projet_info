@@ -11,6 +11,7 @@ from collections import Counter
 import numpy as np
 from sklearn.neighbors import NearestCentroid
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 
 HEART = ("Maladie cardiaque", "dataset_formater/heart.csv",
          "dataset_formater/heart_test.csv")
@@ -375,50 +376,6 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
     return fiabilite, temps, temps_app
 
 
-# def comparaison_nearest_centroide(donnee, separateur=","):
-#     """
-#     Compare notre algorithme et celui de scikit-learn.
-
-#     Parameters
-#     ----------
-#     donnee : tuple
-#         tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
-#     separateur : string, optional
-#         string contenant le séparateur utilisé dans fichier.
-#         La valeur par défaut est ",".
-
-#     Print
-#     -------
-#     Dataset :
-#     Nombre de classe :
-#     Notre algorithme :
-#         Précision : 0.00 %
-#         Temps d'execution : 0.000 ms
-#     Algorithme du module :
-#         Précision : 0.00 %
-#         Temps d'execution : 0.000 ms
-
-#     """
-#     nom, dataset, datatest = donnee
-#     fiabilite_1, temps_1, classes = centroide_plus_proche(dataset, datatest,
-#                                                           separateur)
-#     fiabilite_2, temps_2 = centroide_plus_proche_sklearn(dataset, datatest,
-#                                                          separateur)
-#     nb_classe = len(classes)
-#     print(f"""Dataset : {nom}\nNombre de classe : {nb_classe :.0f}
-#     Notre algorithme :\n\t\tPrécision : {fiabilite_1 :.2f} %
-#     \tTemps d'execution : {temps_1 :.3f} ms\n\tAlgorithme du module :
-#     \tPrécision : {fiabilite_2 :.2f} %
-#     \tTemps d'execution : {temps_2 :.3f} ms\n""")
-
-
-# print("Nearest centroide :\n_________________________________________________")
-# comparaison_nearest_centroide(HEART)
-# comparaison_nearest_centroide(WATER_POTABILITY)
-# comparaison_nearest_centroide(DIABETES)
-# comparaison_nearest_centroide(IRIS)
-
-
 # _____________________________________________________________________________
 # Définition des fonctions pour faire un algorithme de classification Balltree.
 # _____________________________________________________________________________
@@ -678,47 +635,345 @@ def ball_tree_sklearn(dataset, datatest, separateur=','):
     return fiabilite, temps, temps_app
 
 
-# def comparaison_balltree(donnee, precision, separateur=","):
-#     """
-#     Compare notre algorithme et celui de scikit-learn.
-
-#     Parameters
-#     ----------
-#     donnee : tuple
-#         tuple contenant : (nom du dataset, chemin dataset, chemin datatest).
-#     separateur : string, optional
-#         string contenant le séparateur utilisé dans fichier.
-#         La valeur par défaut est ",".
-
-#     Print
-#     -------
-#     Dataset :
-#     Nombre de classe :
-#     Notre algorithme :
-#         Précision : 0.00 %
-#         Temps d'execution : 0.000 ms
-#     Algorithme du module :
-#         Précision : 0.00 %
-#         Temps d'execution : 0.000 ms
-
-#     """
-#     nom, dataset, datatest = donnee
-#     fiabilite_1, temps_1 = classification_balltree(precision, dataset,
-#                                                    datatest, separateur)
-#     fiabilite_2, temps_2 = ball_tree_sklearn(dataset, datatest)
-#     print(f"""Dataset : {nom}\nNombre de classe : {nb_classe :.0f}
-#     Notre algorithme :\n\t\tPrécision : {fiabilite_1 :.2f} %
-#     \tTemps d'execution : {temps_1 :.3f} ms\n\tAlgorithme du module :
-#     \tPrécision : {fiabilite_2 :.2f} %
-#     \tTemps d'execution : {temps_2 :.3f} ms\n""")
+# _____________________________________________________________________________
+# Définition des fonctions pour faire un algorithme de classification Balltree.
+# _____________________________________________________________________________
 
 
-# print("Balltree :\n_________________________________________________")
-# comparaison_balltree(HEART, 7)
-# comparaison_balltree(WATER_POTABILITY, 30)
-# comparaison_balltree(DIABETES, 30)
-# comparaison_balltree(IRIS, 30)
+def liste_classe(data):
+    """
+    renvoie une liste contenant la classe de chaque point
 
+    Parameters
+    ----------
+    data : list
+        liste de points
+
+    Returns
+    -------
+    classes : list
+        liste d'entiers
+
+    """
+    classes = []
+    for point in data:
+        classes.append(point[-1])
+    return classes
+
+
+def liste_donnes(points):
+    """
+    Renvoie une liste contenant les points issu de cette liste sans leur
+    coordonnée
+
+    Parameters
+    ----------
+    points : list
+        liste de points
+
+    Returns
+    -------
+    donnees : list
+        liste de points
+
+    """
+    donnees = []
+    for point in points:
+        liste = [point[i] for i in range(len(points[0])-1)]
+        donnees.append(liste)
+        liste = []
+    return donnees
+
+
+def proba_naives_sklearn(point, points):
+    start = time.time()
+    X = liste_donnes(points)
+    Y = liste_classe(points)
+    clf = GaussianNB()
+    clf.fit(X, Y)
+    GaussianNB()
+    clf_pf = GaussianNB()
+    clf_pf.partial_fit(X, Y, np.unique(Y))
+    GaussianNB()
+    end = time.time()
+    temps = (end - start)
+    return (clf_pf.predict_proba(point)), (int(clf.predict(point))), temps
+
+# naive bayes programmé
+
+
+def calcul_ecart(points):
+    """
+    # calcul l'écart entre la classe de et le rang de la classe parmis
+    les autres classes ex : vin à pH 6 qui est le 3eme pH testé
+    (classe = 6, rang = 3 ), pour eviter un décalage lors de l'utilisation
+    d'une fonction
+
+    Parameters
+    ----------
+    points : list
+        liste de points
+
+    Returns
+    -------
+    integer
+
+    """
+    classes = set(point[-1] for point in points)
+    return int(min(classes))
+
+
+def calcul_esp(points):
+    """
+    Renvoie l'esperance de chaque catégorie en fonction de sa classe
+
+    Parameters
+    ----------
+    points : list
+        liste de points
+
+    Returns
+    -------
+    esperance_par_classe : list
+        liste d'entiers
+
+    """
+    dim_point = len(points[0]) - 1
+    esperance = []
+    esperance_par_classe = []
+    classes = set(point[-1] for point in points)
+    somme = 0
+    compteur = 0
+    for classe in classes:
+        for rang in range(dim_point):
+            for point in points:
+                if point[-1] == classe:
+                    compteur += 1
+                    somme += point[rang]
+            esperance.append(somme/compteur)
+            somme = 0
+            compteur = 0
+        esperance_par_classe.append([esperance, classe])
+        esperance = []
+    return esperance_par_classe
+
+
+def calcul_var(points, ecart):
+    """
+    Renvoie la variance de chaque catégorie en fonction de sa classe
+
+    Parameters
+    ----------
+    points : list
+        liste de points
+    ecart : integer
+
+    Returns
+    -------
+    variance_par_classe : list
+        liste d'entiers
+
+    """
+    dim_point = len(points[0]) - 1
+    variance = []
+    variance_par_classe = []
+    classes = set(point[-1] for point in points)
+    somme = 0
+    compteur = 0
+    for classe in classes:
+        for rang in range(dim_point):
+            for point in points:
+                if point[-1] == classe:
+                    compteur += 1
+                    somme += (point[rang] -
+                              calcul_esp(points)[int(classe - ecart)][0][int(rang)])**2
+            variance.append((somme/(compteur - 1)))
+            somme = 0
+            compteur = 0
+        variance_par_classe.append([variance, classe])
+        variance = []
+    return variance_par_classe
+
+
+def calcul_proba_classe(points):
+    """
+    Renvoie la liste de probabilité qu'un point prit dans la liste
+    appartienne à chaqu'une des classe (ex homme ou femme)
+
+    Parameters
+    ----------
+    points : list
+        liste de points
+
+    Returns
+    -------
+    liste_proba : list
+        liste de probabilitées
+
+    """
+    liste_classe = set([point[-1] for point in points])
+    liste_proba = []
+    for classe in liste_classe:
+        compteur = 0
+        for point in points:
+            if point[-1] == classe:
+                compteur += 1
+        liste_proba.append([compteur/len(points), classe])
+    return liste_proba
+
+
+def calcul_proba_categorie_sachant_classe(point, points, categorie, classe, ecart, esperance, variance):
+    """
+
+    Parameters
+    ----------
+    point : list
+        coordonnées du point étudié
+    points : list
+        liste de points
+    categorie : integer
+        rang du paramètre étudié
+    classe : integer
+        rang de la classe étudié
+    ecart : integer
+    esperance : list
+        liste des espérances d'une catégorie en fonction des classes
+    variance : list
+        liste des variances d'une catégorie en fonction des classes
+
+
+    Returns
+    -------
+    proba : integer
+        probabilité de la catégorie en fonction de la classe
+
+    """
+    esp = esperance[int(classe-ecart)][0][categorie]
+    var = variance[int(classe-ecart)][0][categorie]
+    proba = np.exp((-((point[0][categorie]-esp)**2) /
+                   (2*var)))/(np.sqrt(2*float(np.pi)*var))
+    return proba
+
+
+def calcul_constante(points, ecart, point, esp, var):
+    """
+    Calcul le terme constant de la loi de bayes (l'évidence), la probabilité
+    d'apparetance à une catégorie
+
+    Parameters
+    ----------
+    points : list
+        liste de points
+    ecart : integer
+    point : list
+        coordonnées du point étudié
+    esp : list
+        liste des espérances de chaque catégorie en fonction de la classe
+    var : list
+        liste des variances de chaque catégorie en fonction de la classe
+
+    Returns
+    -------
+    constante : integer
+
+    """
+    classes = set(point[-1] for point in points)
+    proba = 1
+    constante = 0
+    liste_proba = []
+    for classe in classes:
+        for i in range(len(points[0])-1):
+            proba = proba * \
+                calcul_proba_categorie_sachant_classe(
+                    point, points, i, classe, ecart, esp, var)
+        proba = proba*float(calcul_proba_classe(points)[int(classe-ecart)][0])
+        liste_proba.append(proba)
+        proba = 1
+    for i in range(len(liste_proba)):
+        constante += liste_proba[i]
+    return constante
+
+
+def calcul_proba_bayes(point, points):
+    """
+
+
+    Parameters
+    ----------
+    point : TYPE
+        DESCRIPTION.
+    points : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    liste_proba : list
+        liste avec la probabilité d'appartenance du point à chaque classe
+    integer
+        classe ayant la plus grande probabilité d'etre celle du point étudié
+    temps : integer
+        temps moyenne d'une boucle d'apprentissage
+
+    """
+    start = time.time()
+    ecart = calcul_ecart(points)
+    proba_classe = calcul_proba_classe(points)
+    classes = set(point[-1] for point in points)
+    liste_proba = []
+    esp = calcul_esp(points)
+    var = calcul_var(points, ecart)
+    for classe in classes:
+        proba_categorie_sachant_classe = 1
+        for i in range(len(points[0])-1):
+            proba_categorie_sachant_classe = proba_categorie_sachant_classe * \
+                calcul_proba_categorie_sachant_classe(
+                    point, points, i, classe, ecart, esp, var)
+        liste_proba.append([(proba_classe[int(classe-ecart)][0]*proba_categorie_sachant_classe /
+                           calcul_constante(points, ecart, point, esp, var)), classe])
+    end = time.time()
+    temps = (end - start)
+    return liste_proba, max(liste_proba)[1], temps
+
+
+def comparateur(liste_test, dataset):
+    """
+    Compare les succes des 2 algorithmes avec une liste dont la  classe
+    est deja connue
+
+    Parameters
+    ----------
+    liste_test : list
+        liste de points dont on connait la classe et qu'on a retiré de dataset
+    dataset : list
+        liste de points
+
+    Returns
+    -------
+    integer
+        temps et précision de chaque algorithme
+
+    """
+    classes = liste_classe(liste_test)
+    points = liste_donnes(liste_test)
+    temps_1 = 0
+    temps_2 = 0
+    succes_1 = 0
+    succes_2 = 0
+    taille = len(liste_test)
+    for i in range(len(liste_test)):
+        Liste = proba_naives_sklearn([points[i]], dataset)
+        liste = calcul_proba_bayes([points[i]], dataset)
+        temps_1 += Liste[2]
+        temps_2 += liste[2]
+        if Liste[1] == classes[i]:
+            succes_1 += 1
+        if liste[1] == classes[i]:
+            succes_2 += 1
+    temps_1 = temps_1/taille
+    temps_2 = temps_2/taille
+    succes_1 = succes_1/taille * 100
+    succes_2 = succes_2/taille * 100
+    return (succes_1, temps_1), (succes_2, temps_2)
 
 def comparaison(donnee, precision, separateur=','):
     nom, dataset, datatest = donnee
@@ -731,21 +986,35 @@ def comparaison(donnee, precision, separateur=','):
         precision, dataset, datatest, separateur)
     fiabilite_4, tps_point_4, tps_app_4 = ball_tree_sklearn(
         dataset, datatest)
+    data = recuperer_donnee_csv(dataset)
+    test = recuperer_donnee_csv(datatest)
+    (fiabilite_5, tps_point_5), (fiabilite_6, tps_point_6) = comparateur(test,
+                                                                         data)
     textes = [(fiabilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
                tps_app_2, '\tNearest centroide :'),
               (fiabilite_3, tps_point_3, tps_app_3, fiabilite_4, tps_point_4,
-               tps_app_4, '\tBalltree :'),
-              (fiabilite_5, tps_point_5, tps_app_5, fiabilite_6, tps_point_6,
-               tps_app_6, '\tNaives Bayes :')]
+               tps_app_4, '\tBalltree :')]
     print(f"""---------------------------------------\nDataset : {nom}
 Nombre de classe : {nb_classe :.0f}""")
     for text in textes:
-
-        print(text)
+        (faibilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
+         tps_app_2, algo) = text
+        print(algo + '\n\t___________________')
         print(f"""\t\tNotre algorithme :\n\t\t\tPrécision : {fiabilite_1 :.2f} %
         \tTemps apprentissage : {tps_app_1 :.2f} ms
         \tTemps classement d'un point : {tps_point_1 :.2f} ms\n\n\t\tSklearn :
         \tPrécision : {fiabilite_2 :.2f} %
         \tTemps apprentissage : {tps_app_2 :.2f} ms
         \tTemps classement d'un point : {tps_point_2 :.2f} ms""")
+    print(f"""\tNaives Bayes :\n\t___________________\n\t\tNotre Algorithme :
+        \tPrécision : {fiabilite_6 :.2f} %
+        \tTemps classement d'un point : {tps_point_6 :.2f} ms\n\n\t\tSklearn :
+        \tPrécision : {fiabilite_5 :.2f} %
+        \tTemps classement d'un point : {tps_point_5 :.5f} ms""")
     print('---------------------------------------')
+
+
+comparaison(HEART, 15)
+comparaison(WATER_POTABILITY, 15)
+comparaison(DIABETES, 15)
+comparaison(IRIS, 15)
