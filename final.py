@@ -969,8 +969,8 @@ def comparateur(liste_test, dataset):
             succes_1 += 1
         if liste[1] == classes[i]:
             succes_2 += 1
-    temps_1 = temps_1/taille
-    temps_2 = temps_2/taille
+    temps_1 = (temps_1/taille) * 1000
+    temps_2 = (temps_2/taille) * 1000
     succes_1 = succes_1/taille * 100
     succes_2 = succes_2/taille * 100
     return (succes_1, temps_1), (succes_2, temps_2)
