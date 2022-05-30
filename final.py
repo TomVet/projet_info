@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Fais .
-test
+Prérequis :
+    installer le module sklearn
+    utiliser au minimum python 3.8
+    mettre programe python et dataset dans le même dossier
 """
 
 import csv
@@ -896,15 +898,7 @@ Nombre de classe : {nb_classe :.0f}""")
     print('---------------------------------------')
 
 
-start = time.time()
 comparaison(HEART, 15)
-print((time.time() - start) * 1000)
-start = time.time()
 comparaison(DIABETES, 15)
-print((time.time() - start) * 1000)
-start = time.time()
 comparaison(IRIS, 15)
-print((time.time() - start) * 1000)
-start = time.time()
 comparaison(WATER_POTABILITY, 15)
-print((time.time() - start) * 1000)
