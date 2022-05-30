@@ -585,7 +585,7 @@ def ball_tree_sklearn(dataset, datatest, separateur=','):
 # _____________________________________________________________________________
 
 
-def recuperer_classe(data):
+def liste_classe(data):
     """
     renvoie une liste contenant la classe de chaque point
     Parameters
@@ -627,7 +627,7 @@ def liste_donnes(points):
 def proba_naives_sklearn(point, points):
     start = time.time()
     X = liste_donnes(points)
-    Y = recuperer_classe(points)
+    Y = liste_classe(points)
     clf = GaussianNB()
     clf.fit(X, Y)
     GaussianNB()
@@ -749,12 +749,14 @@ def calcul_proba_classe(points):
     return liste_proba
 
 
-def calcul_proba_categorie_sachant_classe(point, categorie, classe, ecart, esperance, variance):
+def calcul_proba_categorie_sachant_classe(point, points, categorie, classe, ecart, esperance, variance):
     """
     Parameters
     ----------
     point : list
         coordonnées du point étudié
+    points : list
+        liste de points
     categorie : integer
         rang du paramètre étudié
     classe : integer
@@ -776,48 +778,6 @@ def calcul_proba_categorie_sachant_classe(point, categorie, classe, ecart, esper
     return proba
 
 
-<<<<<<< Updated upstream
-=======
-def calcul_constante(points, ecart, point, esp, var):
-    """
-    Calcul le terme constant de la loi de bayes (l'évidence), la probabilité
-    d'apparetance à une catégorie
-
-    Parameters
-    ----------
-    points : list
-        liste de points
-    ecart : integer
-    point : list
-        coordonnées du point étudié
-    esp : list
-        liste des espérances de chaque catégorie en fonction de la classe
-    var : list
-        liste des variances de chaque catégorie en fonction de la classe
-
-    Returns
-    -------
-    constante : integer
-
-    """
-    classes = set(point[-1] for point in points)
-    proba = 1
-    constante = 0
-    liste_proba = []
-    for classe in classes:
-        for i in range(len(points[0])-1):
-            proba = proba * \
-                calcul_proba_categorie_sachant_classe(
-                    point, i, classe, ecart, esp, var)
-        proba = proba*float(calcul_proba_classe(points)[int(classe-ecart)][0])
-        liste_proba.append(proba)
-        proba = 1
-    for i in range(len(liste_proba)):
-        constante += liste_proba[i]
-    return constante
-
-
->>>>>>> Stashed changes
 def calcul_proba_bayes(point, points):
     """
     Parameters
@@ -847,11 +807,7 @@ def calcul_proba_bayes(point, points):
         for i in range(len(points[0])-1):
             proba_categorie_sachant_classe = proba_categorie_sachant_classe * \
                 calcul_proba_categorie_sachant_classe(
-<<<<<<< Updated upstream
                     point, points, i, classe, ecart, esp, var)
-=======
-                    point, i, classe, ecart, esp, var)
->>>>>>> Stashed changes
         liste_proba.append([(proba_classe[int(classe-ecart)][0]*proba_categorie_sachant_classe), classe])
     end = time.time()
     temps = (end - start)
@@ -864,7 +820,6 @@ def comparateur(liste_test, dataset):
     est deja connue
     Parameters
     ----------
-<<<<<<< Updated upstream
     liste_test : list
         liste de points dont on connait la classe et qu'on a retiré de dataset
     dataset : list
@@ -882,26 +837,6 @@ def comparateur(liste_test, dataset):
     """
 
     classes = liste_classe(liste_test)
-=======
-    liste_test : TYPE
-        DESCRIPTION.
-    dataset : TYPE
-        DESCRIPTION.
-
-    Returns
-    -------
-    succes_1 : TYPE
-        DESCRIPTION.
-    temps_1 : TYPE
-        DESCRIPTION.
-    succes_2 : TYPE
-        DESCRIPTION.
-    temps_2 : TYPE
-        DESCRIPTION.
-
-    """
-    classes = recuperer_classe(liste_test)
->>>>>>> Stashed changes
     points = liste_donnes(liste_test)
     temps_1 = 0
     temps_2 = 0
@@ -936,7 +871,7 @@ def comparaison(donnee, precision, separateur=','):
         dataset, datatest)
     data = recuperer_donnee_csv(dataset)
     test = recuperer_donnee_csv(datatest)
-    fiabilite_5, tps_point_5, fiabilite_6, tps_point_6 = comparateur(test,
+    (fiabilite_5, tps_point_5), (fiabilite_6, tps_point_6) = comparateur(test,
                                                                          data)
     textes = [(fiabilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
                tps_app_2, '\tNearest centroide :'),
@@ -945,7 +880,7 @@ def comparaison(donnee, precision, separateur=','):
     print(f"""---------------------------------------\nDataset : {nom}
 Nombre de classe : {nb_classe :.0f}""")
     for text in textes:
-        (fiabilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
+        (faibilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
          tps_app_2, algo) = text
         print(algo + '\n\t___________________')
         print(f"""\t\tNotre algorithme :\n\t\t\tPrécision : {fiabilite_1 :.2f} %
@@ -974,4 +909,3 @@ print((time.time() - start) * 1000)
 start = time.time()
 comparaison(WATER_POTABILITY, 15)
 print((time.time() - start) * 1000)
-
