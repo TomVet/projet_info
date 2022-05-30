@@ -142,3 +142,112 @@ Nombre de classe : 3
         	Temps classement d'un point : 1.59664 ms
 ---------------------------------------
 3262.226104736328
+
+---------------------------------------
+Dataset : Maladie cardiaque
+Nombre de classe : 2
+	Nearest centroide :
+	___________________
+		Notre algorithme :
+			Précision : 70.00 %
+        	Temps apprentissage : 3.27 ms
+        	Temps classement d'un point : 0.21 ms
+
+		Sklearn :
+        	Précision : 70.00 %
+        	Temps apprentissage : 3.00 ms
+        	Temps classement d'un point : 0.36 ms
+	Balltree :
+	___________________
+		Notre algorithme :
+			Précision : 70.00 %
+        	Temps apprentissage : 119.40 ms
+        	Temps classement d'un point : 7.74 ms
+
+		Sklearn :
+        	Précision : 75.00 %
+        	Temps apprentissage : 4.00 ms
+        	Temps classement d'un point : 0.70 ms
+	Naives Bayes :
+	___________________
+		Notre Algorithme :
+        	Précision : 85.00 %
+        	Temps classement d'un point : 9092.53 ms
+
+		Sklearn :
+        	Précision : 85.00 %
+        	Temps classement d'un point : 2.75528 ms
+---------------------------------------
+182096.90809249878
+---------------------------------------
+Dataset : Diabète
+Nombre de classe : 2
+	Nearest centroide :
+	___________________
+		Notre algorithme :
+			Précision : 60.00 %
+        	Temps apprentissage : 7.94 ms
+        	Temps classement d'un point : 0.60 ms
+
+		Sklearn :
+        	Précision : 60.00 %
+        	Temps apprentissage : 6.00 ms
+        	Temps classement d'un point : 0.60 ms
+	Balltree :
+	___________________
+		Notre algorithme :
+			Précision : 60.00 %
+        	Temps apprentissage : 211.00 ms
+        	Temps classement d'un point : 14.27 ms
+
+		Sklearn :
+        	Précision : 46.67 %
+        	Temps apprentissage : 8.00 ms
+        	Temps classement d'un point : 1.07 ms
+	Naives Bayes :
+	___________________
+		Notre Algorithme :
+        	Précision : 66.67 %
+        	Temps classement d'un point : 24460.96 ms
+
+		Sklearn :
+        	Précision : 66.67 %
+        	Temps classement d'un point : 4.05401 ms
+---------------------------------------
+367237.1678352356
+---------------------------------------
+Dataset : Iris
+Nombre de classe : 3
+	Nearest centroide :
+	___________________
+		Notre algorithme :
+			Précision : 90.00 %
+        	Temps apprentissage : 1.96 ms
+        	Temps classement d'un point : 0.20 ms
+
+		Sklearn :
+        	Précision : 90.00 %
+        	Temps apprentissage : 1.00 ms
+        	Temps classement d'un point : 0.30 ms
+	Balltree :
+	___________________
+		Notre algorithme :
+			Précision : 90.00 %
+        	Temps apprentissage : 19.00 ms
+        	Temps classement d'un point : 2.20 ms
+
+		Sklearn :
+        	Précision : 90.00 %
+        	Temps apprentissage : 1.00 ms
+        	Temps classement d'un point : 0.60 ms
+	Naives Bayes :
+	___________________
+		Notre Algorithme :
+        	Précision : 100.00 %
+        	Temps classement d'un point : 303.30 ms
+
+		Sklearn :
+        	Précision : 100.00 %
+        	Temps classement d'un point : 1.40011 ms
+---------------------------------------
+3087.001085281372
