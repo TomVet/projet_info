@@ -377,11 +377,11 @@ def separe_liste(points):
         distances_triee = sorted(distances)
         centre_1 = points[distances.index(distances_triee[-1])]
         centre_2 = points[distances.index(distances_triee[-2])]
-        n = -3
+        longueur = -3
         while np.array_equal(centre_1, centre_2):
-            centre_2 = points[distances.index(distances_triee[n])]
-            n -= 1
-            if n == - len(points):
+            centre_2 = points[distances.index(distances_triee[longueur])]
+            longueur -= 1
+            if longueur == - len(points):
                 return points
         points_1 = []
         points_2 = []
@@ -585,7 +585,7 @@ def ball_tree_sklearn(dataset, datatest, separateur=','):
 # _____________________________________________________________________________
 
 
-def liste_classe(data):
+def recuperer_classe(data):
     """
     renvoie une liste contenant la classe de chaque point
     Parameters
@@ -627,7 +627,7 @@ def liste_donnes(points):
 def proba_naives_sklearn(point, points):
     start = time.time()
     X = liste_donnes(points)
-    Y = liste_classe(points)
+    Y = recuperer_classe(points)
     clf = GaussianNB()
     clf.fit(X, Y)
     GaussianNB()
@@ -749,7 +749,7 @@ def calcul_proba_classe(points):
     return liste_proba
 
 
-def calcul_proba_categorie_sachant_classe(point, points, categorie, classe, ecart, esperance, variance):
+def calcul_proba_categorie_sachant_classe(point, categorie, classe, ecart, esperance, variance):
     """
     Parameters
     ----------
@@ -807,7 +807,7 @@ def calcul_proba_bayes(point, points):
         for i in range(len(points[0])-1):
             proba_categorie_sachant_classe = proba_categorie_sachant_classe * \
                 calcul_proba_categorie_sachant_classe(
-                    point, points, i, classe, ecart, esp, var)
+                    point, i, classe, ecart, esp, var)
         liste_proba.append([(proba_classe[int(classe-ecart)][0]*proba_categorie_sachant_classe), classe])
     end = time.time()
     temps = (end - start)
@@ -836,7 +836,7 @@ def comparateur(liste_test, dataset):
         temps de calcul_naive_bayes
     """
 
-    classes = liste_classe(liste_test)
+    classes = recuperer_classe(liste_test)
     points = liste_donnes(liste_test)
     temps_1 = 0
     temps_2 = 0
@@ -844,11 +844,11 @@ def comparateur(liste_test, dataset):
     succes_2 = 0
     taille = len(liste_test)
     for i in range(len(liste_test)):
-        Liste = proba_naives_sklearn([points[i]], dataset)
+        liste_sk = proba_naives_sklearn([points[i]], dataset)
         liste = calcul_proba_bayes([points[i]], dataset)
-        temps_1 += Liste[2]
+        temps_1 += liste_sk[2]
         temps_2 += liste[2]
-        if Liste[1] == classes[i]:
+        if liste_sk[1] == classes[i]:
             succes_1 += 1
         if liste[1] == classes[i]:
             succes_2 += 1
@@ -871,8 +871,7 @@ def comparaison(donnee, precision, separateur=','):
         dataset, datatest)
     data = recuperer_donnee_csv(dataset)
     test = recuperer_donnee_csv(datatest)
-    (fiabilite_5, tps_point_5), (fiabilite_6, tps_point_6) = comparateur(test,
-                                                                         data)
+    fiabilite_5, tps_point_5, fiabilite_6, tps_point_6 = comparateur(test, data)
     textes = [(fiabilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
                tps_app_2, '\tNearest centroide :'),
               (fiabilite_3, tps_point_3, tps_app_3, fiabilite_4, tps_point_4,
@@ -880,7 +879,7 @@ def comparaison(donnee, precision, separateur=','):
     print(f"""---------------------------------------\nDataset : {nom}
 Nombre de classe : {nb_classe :.0f}""")
     for text in textes:
-        (faibilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
+        (fiabilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
          tps_app_2, algo) = text
         print(algo + '\n\t___________________')
         print(f"""\t\tNotre algorithme :\n\t\t\tPrécision : {fiabilite_1 :.2f} %
