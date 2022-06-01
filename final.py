@@ -4,6 +4,7 @@ Prérequis :
     installer le module sklearn
     utiliser au minimum python 3.8
     mettre programe python et dataset dans le même dossier
+    un Ctrl+E permet de lancer le programme
 """
 
 import csv
