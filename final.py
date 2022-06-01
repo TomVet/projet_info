@@ -1,11 +1,34 @@
 # -*- coding: utf-8 -*-
 """
-t.
+On cherche à comparer 3 algorithme de classification.
+
+On s'intéresse ici à :
+    Nearest centroide
+    BallTree
+    Naive Bayes
+Nous implementerons ces 3 algorithmes et pour vérifié leurs implementation on
+utilise le module sklearn dans lequelle ces algorithmes sont implémenté.
+
+_______________________________________________________________________________
+
+Pour tester les performances des algorithmes, ils sont testé sur 4 dataset:
+    - Dataset HEART :
+        https://www.kaggle.com/ronitf/heart-disease-uci
+    - Dataset WATER_POTABILITY :
+        https://www.kaggle.com/botrnganh/knearestneighbours
+    - Dataset DIABETES :
+        https://www.kaggle.com/abdallamahgoub/diabetes
+    - Dataset IRIS :
+        https://www.kaggle.com/shivamkumarsingh1/knn-classifier
+
+_______________________________________________________________________________
 
 Prérequis :
-    installer le module sklearn
+    installer le module sklearn et tqdm
     utiliser au minimum python 3.8
-    mettre programe python et dataset dans le même dossier
+    mettre le programe python et les datasets dans le même dossier.
+
+Pour tester le programme il suffit d'executer le fichier.
 """
 
 import csv
@@ -17,25 +40,14 @@ from sklearn.neighbors import NearestCentroid
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
-HEART = (
-    "Maladie cardiaque",
-    "dataset_formater/heart.csv",
-    "dataset_formater/heart_test.csv",
-)
-WATER_POTABILITY = (
-    "Potabilité de l'eau",
-    "dataset_formater/water_potability_1.csv",
-    "dataset_formater/water_potability_test.csv",
-)
-DIABETES = (
-    "Diabète",
-    "dataset_formater/diabetes.csv",
-    "dataset_formater/diabetes_test.csv",
-)
-IRIS = ("Iris", "dataset_formater/iris.csv", "dataset_formater/iris_test.csv")
+HEART = ("Maladie cardiaque", "heart.csv", "heart_test.csv")
+WATER_POTABILITY = ("Potabilité de l'eau", "water_potability_1.csv",
+                    "water_potability_test.csv")
+DIABETES = ("Diabète", "diabetes.csv", "diabetes_test.csv")
+IRIS = ("Iris", "iris.csv", "iris_test.csv")
 
 
-# Définition de fonction utile pour les 3 algorithmes
+# Définition de fonction utile pour les 3 algorithmes.
 # _____________________________________________________________________________
 
 
@@ -120,6 +132,8 @@ def calcul_coordonnees_centroide(points):
         centroide.append(somme / len(points))
     return centroide
 
+
+# _____________________________________________________________________________
 
 # Définition des fonctions pour faire un algorithme de classification centroide
 # le plus proche .
@@ -218,7 +232,7 @@ def tester_data(fichier, centroides, nb_parametres, classes, separateur=","):
     for test in test_data:
         for classe in classes:
             if (find_nearest_centroid(test[:nb_parametres], centroides),
-                    test[-1]) == (classe):
+                    test[-1]) == (classe, classe):
                 nb_bon += 1
                 break
     return nb_test, nb_bon
@@ -363,6 +377,7 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
 
 
 # _____________________________________________________________________________
+
 # Définition des fonctions pour faire un algorithme de classification Balltree.
 # _____________________________________________________________________________
 
@@ -650,7 +665,9 @@ def ball_tree_sklearn(dataset, datatest, separateur=","):
 
 
 # _____________________________________________________________________________
-# Définition des fonctions pour faire un algorithme de classification Balltree.
+
+# Définition des fonctions pour faire un algorithme de classification Naive
+# Bayes.
 # _____________________________________________________________________________
 
 
@@ -761,22 +778,19 @@ def calcul_esp(points):
         liste d'entiers
     """
     dim_point = len(points[0]) - 1
-    esperance = []
     esperance_par_classe = []
     classes = set(point[-1] for point in points)
-    somme = 0
-    compteur = 0
     for classe in classes:
+        esperance = []
         for rang in range(dim_point):
+            somme = 0
+            compteur = 0
             for point in points:
                 if point[-1] == classe:
                     compteur += 1
                     somme += point[rang]
             esperance.append(somme / compteur)
-            somme = 0
-            compteur = 0
-        esperance_par_classe.append([esperance, classe])
-        esperance = []
+            esperance_par_classe.append([esperance, classe])
     return esperance_par_classe
 
 
@@ -795,24 +809,21 @@ def calcul_var(points, ecart):
         liste d'entiers
     """
     dim_point = len(points[0]) - 1
-    variance = []
     variance_par_classe = []
     classes = set(point[-1] for point in points)
-    somme = 0
-    compteur = 0
+    esp = calcul_esp(points)
     for classe in classes:
+        variance = []
         for rang in range(dim_point):
+            somme = 0
+            compteur = 0
             for point in points:
                 if point[-1] == classe:
                     compteur += 1
                     somme += (
-                        point[rang]
-                        - calcul_esp(points)[int(classe - ecart)][0][rang])**2
+                        point[rang] - esp[int(classe - ecart)][0][rang])**2
             variance.append((somme / (compteur - 1)))
-            somme = 0
-            compteur = 0
         variance_par_classe.append([variance, classe])
-        variance = []
     return variance_par_classe
 
 
