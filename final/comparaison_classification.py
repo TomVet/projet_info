@@ -52,7 +52,7 @@ IRIS = ("Iris", "iris.csv", "iris_test.csv")
 
 def recuperer_donnee_csv(fichier, separateur=","):
     """
-    Créée une liste de liste contenant les données de `fichier`.
+    Créée une liste de listes contenant les données de `fichier`.
 
     Chaque ligne de `fichier` devient une sous liste de `data`.
 
@@ -780,41 +780,6 @@ def ball_tree_sklearn(dataset, datatest, separateur=","):
 # _____________________________________________________________________________
 
 
-def proba_naives_sklearn(point, points):
-    """
-    Reste.
-
-    Paramètres
-    ----------
-    point : array_like
-        Liste de la forme (nb_parametre) contenant les coordonnées du
-        `point`.
-    points : array_like
-        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
-        représenter par les listes de leurs coordonnées avec leurs classes.
-
-    Retours
-    -------
-    prediction_sk : float
-        Classe prédite par Naive Bayes pour `point`.
-
-
-    """
-    points_sc = liste_donnes(points)
-    classes = recuperer_classe(points)
-    clf = GaussianNB()
-    clf.fit(points_sc, classes)
-    GaussianNB()
-    clf_pf = GaussianNB()
-    clf_pf.partial_fit(points_sc, classes, np.unique(classes))
-    GaussianNB()
-    prediction_sk = clf.predict(point)
-    return prediction_sk
-
-
-# naive bayes programmé
-
-
 def calcul_ecart(points):
     """
     Calcul l'écart entre la première classe et 0.
@@ -1009,6 +974,42 @@ def calcul_proba_bayes(point, points):
     return prediction_nb
 
 
+# Définition des fonctions pour utilisée l'algorithme Naive Bayes de sklear.
+# _____________________________________________________________________________
+
+
+def proba_naives_sklearn(point, points):
+    """
+    Reste.
+
+    Paramètres
+    ----------
+    point : array_like
+        Liste de la forme (nb_parametre) contenant les coordonnées du
+        `point`.
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées avec leurs classes.
+
+    Retours
+    -------
+    prediction_sk : float
+        Classe prédite par Naive Bayes pour `point`.
+
+
+    """
+    points_sc = liste_donnes(points)
+    classes = recuperer_classe(points)
+    clf = GaussianNB()
+    clf.fit(points_sc, classes)
+    GaussianNB()
+    clf_pf = GaussianNB()
+    clf_pf.partial_fit(points_sc, classes, np.unique(classes))
+    GaussianNB()
+    prediction_sk = clf.predict(point)
+    return prediction_sk
+
+
 def comparateur(liste_test, dataset):
     """
     Test les 2 algorithmes.
@@ -1058,6 +1059,12 @@ def comparateur(liste_test, dataset):
     fiabilite_sk = fiabilite_sk / taille * 100
     fiabilite_nb = fiabilite_nb / taille * 100
     return fiabilite_sk, temps_sk, fiabilite_nb, temps_nb
+
+
+# _____________________________________________________________________________
+
+# Définition de la fonction pour comparer les algorithmes entre eux.
+# _____________________________________________________________________________
 
 
 def comparaison(donnee, precision, separateur=","):
@@ -1145,6 +1152,12 @@ Nombre de classe : {nb_classe :.0f}"""
         \tTemps classement d'un point : {tps_point_5 :.2f} ms"""
     )
     print("---------------------------------------")
+
+
+# _____________________________________________________________________________
+
+# Comparaison des 3 algorithmes avec 4 dataset.
+# _____________________________________________________________________________
 
 
 comparaison(HEART, 15)
