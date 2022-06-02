@@ -1004,8 +1004,8 @@ def calcul_proba_bayes(point, points):
                     point, i, classe, ecart, esp, var
                 )
             )
-            liste_proba.append([(proba_classe[int(classe - ecart)][0] *
-                                 proba_categorie_sachant_classe), classe])
+        liste_proba.append([(proba_classe[int(classe - ecart)][0] *
+                             proba_categorie_sachant_classe), classe])
     prediction_nb = max(liste_proba)[1]
     return prediction_nb
 
@@ -1043,7 +1043,7 @@ def comparateur(liste_test, dataset):
     fiabilite_sk = 0
     fiabilite_nb = 0
     taille = len(liste_test)
-    for i in tqdm(range(taille)):
+    for i in range(taille):
         start = time.time()
         prediction_sk = proba_naives_sklearn([points[i]], dataset)
         temps_sk += time.time() - start

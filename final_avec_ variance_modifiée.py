@@ -1,9 +1,34 @@
 # -*- coding: utf-8 -*-
 """
+On cherche à comparer 3 algorithme de classification.
+
+On s'intéresse ici à :
+    Nearest centroide
+    BallTree
+    Naive Bayes
+Nous implementerons ces 3 algorithmes et pour vérifié leurs implementation on
+utilise le module sklearn dans lequelle ces algorithmes sont implémenté.
+
+_______________________________________________________________________________
+
+Pour tester les performances des algorithmes, ils sont testé sur 4 dataset:
+    - Dataset HEART :
+        https://www.kaggle.com/ronitf/heart-disease-uci
+    - Dataset WATER_POTABILITY :
+        https://www.kaggle.com/botrnganh/knearestneighbours
+    - Dataset DIABETES :
+        https://www.kaggle.com/abdallamahgoub/diabetes
+    - Dataset IRIS :
+        https://www.kaggle.com/shivamkumarsingh1/knn-classifier
+
+_______________________________________________________________________________
+
 Prérequis :
-    installer le module sklearn
-    utiliser au minimum python 3.8
-    mettre programe python et dataset dans le même dossier
+    Installer le module sklearn et tqdm
+    Utiliser au minimum python 3.8
+    Mettre le programe python et les datasets dans le même dossier.
+
+Pour tester le programme il suffit d'executer le fichier.
 """
 
 import csv
