@@ -35,7 +35,6 @@ import csv
 import time
 from collections import Counter
 import numpy as np
-from tqdm import tqdm
 from sklearn.neighbors import NearestCentroid
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -260,7 +259,7 @@ def calcul_centroides(dataset):
     return centroides, nb_parametres, classes
 
 
-def tester_data(fichier, centroides, nb_parametres, classes, separateur=","):
+def tester_data(fichier, centroides, nb_parametres, separateur=","):
     """
     Test la précision de l'algorithme.
 
@@ -336,7 +335,7 @@ def centroide_plus_proche(dataset, datatest, separateur=","):
     tps_app = (time.time() - start) * 1000
     start = time.time()
     fiabilite, nb_test = tester_data(datatest, centroides, nb_parametres,
-                                     classes, separateur)
+                                     separateur)
     end = time.time()
     temps = (end - start) * 1000 / nb_test
     return fiabilite, temps, classes, tps_app
