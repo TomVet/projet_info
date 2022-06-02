@@ -24,9 +24,9 @@ Pour tester les performances des algorithmes, ils sont testé sur 4 dataset:
 _______________________________________________________________________________
 
 Prérequis :
-    installer le module sklearn et tqdm
-    utiliser au minimum python 3.8
-    mettre le programe python et les datasets dans le même dossier.
+    Installer le module sklearn et tqdm
+    Utiliser au minimum python 3.8
+    Mettre le programe python et les datasets dans le même dossier.
 
 Pour tester le programme il suffit d'executer le fichier.
 """
@@ -53,20 +53,24 @@ IRIS = ("Iris", "iris.csv", "iris_test.csv")
 
 def recuperer_donnee_csv(fichier, separateur=","):
     """
-    Créée une liste de liste contenant les données de fichier.
+    Créée une liste de liste contenant les données de `fichier`.
 
-    Parameters
+    Chaque ligne de `fichier` devient une sous liste de `data`.
+
+    Paramètres
     ----------
     fichier : string
-        chemin du fichier csv a lire
-        ce fichier ne doit contenir que des float.
+        Chemin du fichier csv a lire.
+        Ce fichier ne doit contenir que des float.
     separateur : string, optional
-        string contenant le séparateur utilisé dans fichier.
+        String contenant le séparateur utilisé dans fichier.
         La valeur par défaut est ",".
-    Returns
+
+    Retours
     -------
-    data : np.array
-        array de dimension 2.
+    data : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant les points
+        de `fichier`.
     """
     with open(fichier, newline="", encoding="utf-8") as data_file:
         data = []
@@ -80,57 +84,105 @@ def recuperer_donnee_csv(fichier, separateur=","):
 
 def calcul_distance_euclidienne(point_1, point_2):
     """
-    Calcule de la distance euclidienne au carré entre les points 1 et 2.
+    Calcul de la distance euclidienne au carré entre `points_1` et `point_2`.
 
-    Parameters
+    Soient `point_1` = [x1, x2, ..., xn] et `point_2` = [y1, y2, ..., yn]
+    alors distance = somme de i=1 à n de (xi - yi)**2 .
+
+    Paramètres
     ----------
-    point_1 : list
-        liste des coordonnées du point 1.
-    point_2 : list
-        liste des coordonnées du point 2.
-    Returns
+    point_1 : array_like
+        Liste des coordonnées de `point_1` sans la classe.
+    point_2 : array_like
+        Liste des coordonnées de `point_2` sans la classe.
+
+    Retours
     -------
     distance : float
-        distance euclidienne au carré entre les points 1 et 2.
+        Distance euclidienne au carré entre `points_1` et `points_2`.
+
     """
-    # on calcule la dimension de l'espace des 2 points
-    nb_dimension = len(point_1)
+    nb_parametre = len(point_1)
     distance = 0
-    # on fait la somme au carré des coordonnées des points 1 et 2 dans chaque
-    # dimension
-    for dimension in range(nb_dimension):
-        somme = (point_1[dimension] - point_2[dimension]) ** 2
+    for parametre in range(nb_parametre):
+        somme = (point_1[parametre] - point_2[parametre]) ** 2
         distance += somme
     return distance
 
 
 def calcul_coordonnees_centroide(points):
     """
-    Calcule le centroide des points de liste_points de dimension.
+    Calcul le centroide des points de `points` de dimension `nb_dimension`.
 
-    Parameters
+    Soient (A1, A2, ..., An) n point de dimension nb_parametre
+    centroide = 1/n * somme de i=1 à n de Ai .
+
+    Paramètres
     ----------
-    points : list
-        liste de coordonnée de point de même dimension.
-    Returns
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre) contenant les coordonnées
+        des points sans leurs classe.
+
+    Retours
     -------
-    centroide : list
-        liste des coordonnée du centroide calculé.
+    centroide : array_like
+        Liste des coordonnées du centroide calculé.
+
     """
     centroide = []
-    # on calcule la dimension de l'espace considéré pour le centroide
-    # print('test')
-    # print(points)
-    nb_dimension = len(points[0])
-    # on calcule les coordonnées du centroide dans chaque dimension
-    for dimension in range(nb_dimension):
+    nb_parametre = len(points[0])
+    # on calcul les coordonnées du centroide dans chaque dimension
+    for parametre in range(nb_parametre):
         somme = 0
-        # on somme les coordonnées de chaque points
         for point in points:
-            somme += point[dimension]
-        # on ajoute la somme / par le nombre de point a coordonnées
+            somme += point[parametre]
         centroide.append(somme / len(points))
     return centroide
+
+
+def recuperer_classe(data):
+    """
+    Renvoie une liste contenant la classe de chaque point.
+
+    Paramètres
+    ----------
+    data : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant les points
+        dont on veut extraire les classes.
+
+    Retours
+    -------
+    classes : array_like
+        Liste de la forme (nb_point) contenant les classes des points de
+        `data` dans le même ordre que les points.
+
+    """
+    classes = []
+    for point in data:
+        classes.append(point[-1])
+    return classes
+
+
+def liste_donnes(points):
+    """
+    Renvoie la liste des points sans leurs classes.
+
+    On retire donc le dernière élement de chaque point.
+
+    Paramètres
+    ----------
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant les points
+        dont on veut extraire les coordonnées.
+    Retours
+    -------
+    donnees : array_like
+        Liste de la forme (nb_point, nb_parametre) contenant les points
+        sans leurs classes.
+
+    """
+    donnees = [point[:-1] for point in points]
+    return donnees
 
 
 # _____________________________________________________________________________
@@ -142,51 +194,58 @@ def calcul_coordonnees_centroide(points):
 
 def find_nearest_centroid(point, centroides):
     """
-    Permet de trouver le centroide le plus proche du point.
+    Permet de trouver le centroide le plus proche du `point`.
 
-    Parameters
+    Calcul la distance entre le `point` et tout les centroides puis renvoie
+    la classe du centroide pour lequel la distance est minimale.
+
+    Paramètres
     ----------
-    point : list
-        liste des coordonnées du point.
-    centroides : list
-        liste de coordonnée de centroides.
-    Returns
+    point : array_like
+        Liste de la forme (nb_parametre) contenant les coordonnées du point.
+    centroides : array_like
+        Liste de la forme (nb_classes) contenant des tuples
+        de la forme (classe_centroide, coordonnées_centroide).
+
+    Retours
     -------
     classe_du_min : int
-        classe du centroide le plus proche de point dans la liste centroides.
+        Classe du centroide le plus proche de point dans la liste centroides.
+
     """
     distance_min = calcul_distance_euclidienne(point, centroides[0][1])
     classe_du_min = centroides[0][0]
-    # on parcoure la liste des centroides
     for classe, centroide in centroides:
-        # on calcule la distance entre le centroide et le point
         distance = calcul_distance_euclidienne(point, centroide)
-        # si la nouvelle distance est plus petite que le minimum
-        # elle devient le minimum
         if distance_min > distance:
             distance_min = distance
-            # on conserve la classe du centroide le plus proche
             classe_du_min = classe
     return classe_du_min
 
 
 def calcul_centroides(dataset):
     """
-    Calcule les centroides pour chaque classe de fichier.
+    Calcul les centroides pour chaque classe de `dataset`.
 
-    Parameters
+    Regroupe les points par classes puis calcul les centroides de chaque
+    classes.
+
+    Paramètres
     ----------
-    dataset : list
-        liste contenant des points représenter par les listes de leurs
-        coordonnées.
-    Returns
+    dataset : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées.
+
+    Retours
     -------
-    centroides : np.array
-        liste des coordonnées des centroides de chaque classe.
+    centroides : array_like
+        Liste de la forme (nb_classes, 2, nb_parametre) contenant des tuples
+        de la forme (classe_centroide, coordonnées_centroide).
     nb_parametres : int
-        nombre de parametres pour définir chaque point.
+        Nombre de paramètres pour définir chaque point.
     classes : set
-        set des classes du dataset
+        Set des classes du dataset
+
     """
     nb_parametres = len(dataset[1]) - 1
     centroides = []
@@ -205,71 +264,79 @@ def tester_data(fichier, centroides, nb_parametres, classes, separateur=","):
     """
     Test la précision de l'algorithme.
 
-    Parameters
+    Verifie la prédiction de l'algorithme en appliquant l'algorithme à des
+    points connue dont on connait la classe que l'on compare avec la
+    prédiction.
+
+    Paramètres
     ----------
     fichier : string
-        chemin du fichier csv avec les données de test
-        ce fichier ne doit contenir que des float.
-    centroides : np.array
-        liste des coordonnées des centroides de chaque classe.
+        Chemin du fichier csv avec les données de test.
+        Ce fichier ne doit contenir que des float.
+    centroides : array_like
+        Liste de la forme (nb_classes, 2, nb_parametre) contenant des tuples
+        de la forme (classe_centroide, coordonnées_centroide).
     nb_parametres : int
-        nombre de paramètres pour définir chaque classe.
+        Nombre de paramètres pour définir chaque point.
     classes : set
-        set des classes du dataset
+        Set des classes du dataset
     separateur : string, optional
-        string contenant le séparateur utilisé dans fichier.
+        String contenant le séparateur utilisé dans `fichier`.
         La valeur par défaut est ",".
-    Returns
+
+    Retours
     -------
+    fiabilite : float
+        Précision de l'algorithme sur cet ensemble de données (en pourcentage).
     nb_test : int
-        nombre de test effectuer.
-    nb_bon : int
-        nombre de test réussi.
+        Nombre de test effectué.
+
     """
     test_data = recuperer_donnee_csv(fichier, separateur)
     nb_test = len(test_data)
     nb_bon = 0
     for test in test_data:
-        for classe in classes:
-            if (find_nearest_centroid(test[:nb_parametres], centroides),
-                    test[-1]) == (classe, classe):
-                nb_bon += 1
-                break
-    return nb_test, nb_bon
+        if (find_nearest_centroid(test[:nb_parametres], centroides) ==
+                test[-1]):
+            nb_bon += 1
+    fiabilite = nb_bon / nb_test * 100
+    return fiabilite, nb_test
 
 
 def centroide_plus_proche(dataset, datatest, separateur=","):
     """
     Test l'algorithme et renvoie le précision et la vitesse d'éxecution.
 
-    Utilise comme données d'apprentissage dataset et comme
-    données de test datatest
-    Parameters
+    Utilise comme données d'apprentissage `dataset` et comme
+    données de test `datatest`.
+
+    Paramètres
     ----------
     dataset : string
-        chemin du fichier csv avec les données d'entrainement
-        ce fichier ne doit contenir que des float.
+        Chemin du fichier csv avec les données d'entrainement.
+        Ce fichier ne doit contenir que des float.
     datatest : string
-        chemin du fichier csv avec les données de test
-        ce fichier ne doit contenir que des float.
+        Chemin du fichier csv avec les données de test.
+        Ce fichier ne doit contenir que des float.
     separateur : string, optional
-        string contenant le séparateur utilisé dans fichier.
+        String contenant le séparateur utilisé dans fichier.
         La valeur par défaut est ",".
-    Returns
+
+    Retours
     -------
     fiabilite : float
         précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
         temps pour classer un point en milliseconde.
+
     """
     list_dataset = recuperer_donnee_csv(dataset, separateur)
     start = time.time()
     centroides, nb_parametres, classes = calcul_centroides(list_dataset)
     tps_app = (time.time() - start) * 1000
     start = time.time()
-    nb_test, nb_bon = tester_data(datatest, centroides, nb_parametres,
-                                  classes, separateur)
-    fiabilite = nb_bon / nb_test * 100
+    fiabilite, nb_test = tester_data(datatest, centroides, nb_parametres,
+                                     classes, separateur)
     end = time.time()
     temps = (end - start) * 1000 / nb_test
     return fiabilite, temps, classes, tps_app
@@ -284,20 +351,22 @@ def apprentissage(fichier, clf, separateur=","):
     """
     Ajuste le modèle en fonction des données de fichier.
 
-    Parameters
+    Paramètres
     ----------
     fichier : string
-        chemin du fichier csv avec les données d'entrainement
-        ce fichier ne doit contenir que des float.
+        Chemin du fichier csv avec les données d'entrainement.
+        Ce fichier ne doit contenir que des float.
     clf : fonction
-        fonction de classification de la bibliothèque scikitlearn,
+        Fonction de classification de la bibliothèque scikitlearn,
         ici NearestCentroid().
     separateur : string, optional
-        string contenant le separateur utiliser dans fichier.
+        String contenant le separateur utiliser dans fichier.
         La valeur par défaut est ",".
-    Returns
+
+    Retours
     -------
     None.
+
     """
     start = time.time()
     dataset = recuperer_donnee_csv(fichier, separateur)
@@ -315,25 +384,27 @@ def apprentissage(fichier, clf, separateur=","):
 
 def test_donnees(fichier, clf, separateur=","):
     """
-    Test l'algorithme de classification pour les données de fichier.
+    Test l'algorithme de classification pour les données de `fichier`.
 
-    Parameters
+    Paramètres
     ----------
     fichier : string
-        chemin du fichier csv avec les donnees de test
-        ce fichier ne doit contenir que des float.
+        Chemin du fichier csv avec les donnees de test.
+        Ce fichier ne doit contenir que des float.
     clf : fonction
-        fonction de classification de la bibliothèque scikitlearn,
+        Fonction de classification de la bibliothèque scikitlearn,
         ici NearestCentroid().
     separateur : string, optional
-        string contenant le séparateur utilisé dans fichier.
+        String contenant le séparateur utilisé dans fichier.
         La valeur par défaut est ",".
-    Returns
+
+    Retours
     -------
     fiabilite : float
-        précision de l'algorithme sur cet ensemble de données (en pourcentage).
+        Précision de l'algorithme sur cet ensemble de données (en pourcentage).
     nb_test : int
-        nombre de test éffectué pour calculer la fiabilité
+        Nombre de test éffectué pour calculer la fiabilité.
+
     """
     datatest = recuperer_donnee_csv(fichier, separateur)
     nb_bon = 0
@@ -349,23 +420,27 @@ def centroide_plus_proche_sklearn(dataset, datatest, separateur=","):
     """
     Réalise l'apprentissage et le test de l'algorithme.
 
-    Parameters
+    Paramètres
     ----------
-    dataset : np.array
-        chemin du fichier csv avec les données d'entrainement
-        ce fichier ne doit contenir que des float.
-    datatest : np.array
-        chemin du fichier csv avec les données de test
-        ce fichier ne doit contenir que des float.
+    dataset : string
+        Chemin du fichier csv avec les données d'entrainement.
+        Ce fichier ne doit contenir que des float.
+    datatest : string
+        Chemin du fichier csv avec les données de test.
+        Ce fichier ne doit contenir que des float.
     separateur : string, optional
-        string contenant le séparateur utilisé dans fichier.
+        String contenant le séparateur utilisé dans fichier.
         La valeur par défaut est ",".
-    Returns
+
+    Retours
     -------
     fiabilite : float
-        précision de l'algorithme sur cet ensemble de données (en pourcentage).
+        Précision de l'algorithme sur cet ensemble de données (en pourcentage).
     temps : float
-        temps pour classer un point en milliseconde.
+        Temps pour classer un point en milliseconde.
+    temps_app : float
+        Temps pour réaliser l'apprentissage.
+
     """
     start = time.time()
     clf = NearestCentroid()
@@ -387,25 +462,31 @@ def separe_liste(points):
     Sépare la liste de point en 2 sous listes.
 
     Calcul le centroide de points et trouve les 2 points les plus éloigné du
-    centroide. Puis sépare les points en fonction de leurs distance au 2 points
-    les plus éloigné du centroide.
-    Parameters
+    centroide. Puis sépare les points en fonction de leurs distance au 2
+    points les plus éloigné du centroide.
+
+    Paramètres
     ----------
-    points : list
-        liste à séparer.
-    Returns
+    points : array_like
+        Liste à séparer de la forme (nb_point, nb_parametre).
+
+    Retours
     -------
-    points_1 : list
-        1 er sous liste.
-    points_2 : list
+    points_1 : array_like
+        1er sous liste.
+    points_2 : array_like
         2eme sous liste.
+
     """
+    # Si la liste ne comporte que 2 points on sépare juste la liste en 2.
     if len(points) == 2:
         points_1 = [points[0]]
         points_2 = [points[1]]
     else:
         centroide = calcul_coordonnees_centroide(points)
         distances = []
+        # On calcul les distance entre le centroide de `points` et les points
+        # pour pouvoir trouver les 2 points les plus éloigné.
         for point in points:
             distances.append(calcul_distance_euclidienne(point[:-1],
                                                          centroide))
@@ -413,6 +494,7 @@ def separe_liste(points):
         centre_1 = points[distances.index(distances_triee[-1])]
         centre_2 = points[distances.index(distances_triee[-2])]
         longueur = -3
+        # Si les 2 points les plus loin sont identique on choisi un autre point.
         while np.array_equal(centre_1, centre_2):
             centre_2 = points[distances.index(distances_triee[longueur])]
             longueur -= 1
@@ -420,6 +502,7 @@ def separe_liste(points):
                 return points
         points_1 = []
         points_2 = []
+        # On attribue chaque point de `points` à une des 2 nouvelle liste.
         for point in points:
             dist_1 = calcul_distance_euclidienne(centre_1[:-1], point[:-1])
             dist_2 = calcul_distance_euclidienne(centre_2[:-1], point[:-1])
@@ -434,21 +517,26 @@ def ball_tree(dataset, profondeur):
     """
     Compartimente dataset selon l'algorithme BallTree.
 
-    Parameters
+    Paramètres
     ----------
-    dataset : list
-        Liste de points à séparer.
+    dataset : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées.
     profondeur : int
         Nombre de fois que la liste de départ est séparé.
-    Returns
+
+    Retours
     -------
-    listes : list
-        liste de listes créé à partir de dataset selon l'algorithme BallTree.
+    listes : array_like
+        Liste de listes de points créé à partir de dataset selon l'algorithme
+        BallTree.
+
     """
     listes = separe_liste(dataset)
     for _ in range(profondeur - 1):
         nouvelle_listes = []
         for liste in listes:
+            # On ne sépare pas une liste contenant un unique point.
             if len(liste) == 1:
                 nouvelle_listes.append(liste)
             else:
@@ -461,16 +549,20 @@ def ball_tree(dataset, profondeur):
 
 def classe_liste(points):
     """
-    Renvoie la classe la plus représenté dans la liste points.
+    Renvoie la classe la plus représenté dans la liste `points`.
 
-    Parameters
+    Paramètres
     ----------
-    points : list
-        Liste de point pour laquelle il faut déterminer la classe.
-    Returns
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées avec en dernier leurs
+        classes.
+
+    Retours
     -------
     classe : int
-        classe la plus représenter dans la liste points.
+        Classe la plus représenter dans la liste `points`.
+
     """
     classes = []
     for point in points:
@@ -482,20 +574,22 @@ def classe_liste(points):
 
 def centroide_classe_liste(listes):
     """
-    Calcul les centroides et classes des listes de listes.
+    Calcul les centroides et classes des listes de `listes`.
 
-    Parameters
+    Paramètres
     ----------
-    listes : listes
-        liste des listes de points pour lesquelle on veut déterminer la classe
-        et le centroide.
-    Returns
+    listes : array_like
+        Liste des listes de points pour lesquelle on veut déterminer les
+        classes et les centroides.
+
+    Retours
     -------
-    centroides : list
-        Liste des coordonnées des centroides des listes de listes rangée dans
+    centroides : array_like
+        Liste des coordonnées des centroides des listes de `listes` rangée dans
         le même ordre.
-    classes : list
-        Liste des classes des listes de listes rangée dans le même ordre.
+    classes : array_like
+        Liste des classes des listes de `listes` rangée dans le même ordre.
+
     """
     centroides = []
     classes = []
@@ -507,21 +601,23 @@ def centroide_classe_liste(listes):
 
 def prediction(point, centroides, classes):
     """
-    Recherche le centroides le plus proche du point et renvoie sa classe.
+    Recherche le centroide le plus proche du `point` et renvoie sa classe.
 
-    Parameters
+    Paramètres
     ----------
-    point : list
-        Coordonnée du point pour lequelle on veux déterminé la classe.
-    centroides : list
-        Liste des centroides des sous .
-    classes : TYPE
-        DESCRIPTION.
+    point : array_like
+        Liste de la forme (nb_parametre + 1) contenant les coordonnées et la
+        classe de `point`.
+    centroides : array_like
+        Liste de  la forme (nb_centroide, nb_parametre) contenant les
+        coordonées des centroides.
+    classes : array_like
+        Liste de la forme (nb_centroiode) contenant les classes des centroides.
 
-    Returns
+    Retours
     -------
-    TYPE
-        DESCRIPTION.
+    classe : float
+        Classe prédite par le balltree pour `point`.
 
     """
     dist_min = calcul_distance_euclidienne(centroides[0][:-1], point[:-1])
@@ -531,34 +627,40 @@ def prediction(point, centroides, classes):
         if dist < dist_min:
             dist_min = dist
             centroide_min = centroide
-    return classes[centroides.index(centroide_min)]
+    classe = classes[centroides.index(centroide_min)]
+    return classe
 
 
-def classification_balltree(precision, dataset, datatest, separateur=","):
+def classification_balltree(profondeur, dataset, datatest, separateur=","):
     """
-    Reste.
+    Réalise l'apprentissage et le test de l'algorithme.
 
-    Parameters
+    Paramètres
     ----------
-    precision : TYPE
-        DESCRIPTION.
-    dataset : TYPE
-        DESCRIPTION.
-    datatest : TYPE
-        DESCRIPTION.
-    separateur : TYPE, optional
-        DESCRIPTION. La valeur par défaut est ','.
+    profondeur : int
+        Nombre de fois que la liste de départ est séparé.
+    dataset : string
+        Chemin du fichier csv avec les données d'entrainement.
+        Ce fichier ne doit contenir que des float.
+    datatest : string
+        Chemin du fichier csv avec les données de test.
+        Ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        String contenant le séparateur utilisé dans fichier.
+        La valeur par défaut est ",".
 
-    Returns
+    Retours
     -------
-    fiabilite : TYPE
-        DESCRIPTION.
-    temps : TYPE
-        DESCRIPTION.
+    fiabilite : float
+        Précision de l'algorithme sur cet ensemble de données (en pourcentage).
+    temps : float
+        Temps pour classer un point en milliseconde.
+    temps_app : float
+        Temps pour réaliser l'apprentissage.
 
     """
     start = time.time()
-    listes = ball_tree(recuperer_donnee_csv(dataset, separateur), precision)
+    listes = ball_tree(recuperer_donnee_csv(dataset, separateur), profondeur)
     centroides, classes = centroide_classe_liste(listes)
     temps_app = (time.time() - start) * 1000
     start = time.time()
@@ -579,57 +681,58 @@ def classification_balltree(precision, dataset, datatest, separateur=","):
 
 def apprentissage_sklearn(fichier, separateur=","):
     """
-    Reste.
+    Réalise l'apprentissage pour le balltree de sklearn.
 
-    Parameters
+    Paramètres
     ----------
-    fichier : TYPE
-        DESCRIPTION.
-    separateur : TYPE, optional
-        DESCRIPTION. The default is ','.
-    Returns
+    fichier : string
+        Chemin du fichier csv avec les données d'entrainement.
+        Ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        String contenant le séparateur utilisé dans fichier.
+        La valeur par défaut est ",".
+    Retours
     -------
-    neigh : TYPE
-        DESCRIPTION.
+    tree : object
+        Classifier sklearn.
     """
-    neigh = KNeighborsClassifier(algorithm="ball_tree")
+    tree = KNeighborsClassifier(
+        algorithm="ball_tree", leaf_size=10, n_neighbors=3)
     dataset = recuperer_donnee_csv(fichier, separateur)
-    echantillon = []
-    cibles = []
-    for point in dataset:
-        echantillon.append(point[:-1])
-        cibles.append(point[-1])
-    echantillon = np.resize(echantillon, (len(cibles), len(dataset[1]) - 1))
-    neigh.fit(echantillon, cibles)
-    return neigh
+    tree.fit(liste_donnes(dataset), recuperer_classe(dataset))
+    return tree
 
 
-def test_donnees_sklearn(fichier, neigh, separateur):
+def test_donnees_sklearn(fichier, tree, separateur=","):
     """
-    Reste.
+    Test le Balltree de sklearn.
 
-    Parameters
+    Paramètres
     ----------
-    fichier : TYPE
-        DESCRIPTION.
-    neigh : TYPE
-        DESCRIPTION.
-    separateur : TYPE
-        DESCRIPTION.
+    fichier : string
+        Chemin du fichier csv avec les données d'entrainement.
+        Ce fichier ne doit contenir que des float.
+    tree : object
+        Classifier sklearn.
+    separateur : string, optional
+        String contenant le séparateur utilisé dans fichier.
+        La valeur par défaut est ",".
 
-    Returns
+    Retours
     -------
-    fiabilite : TYPE
-        DESCRIPTION.
-    nb_test : TYPE
-        DESCRIPTION.
+    fiabilite : float
+        Précision de l'algorithme sur cet ensemble de données (en pourcentage).
+    nb_test : int
+        Nombre de test éffectué pour calculer la fiabilité.
 
     """
     datatest = recuperer_donnee_csv(fichier, separateur)
     nb_bon = 0
     nb_test = len(datatest)
-    for point in datatest:
-        if neigh.predict([point[:-1]]) == point[-1]:
+    prediction_sk = tree.predict(liste_donnes(datatest))
+    classes = recuperer_classe(datatest)
+    for indice, classe in enumerate(prediction_sk):
+        if classe == classes[indice]:
             nb_bon += 1
     fiabilite = nb_bon / nb_test * 100
     return fiabilite, nb_test
@@ -637,31 +740,34 @@ def test_donnees_sklearn(fichier, neigh, separateur):
 
 def ball_tree_sklearn(dataset, datatest, separateur=","):
     """
-    Reste.
+    Réalise l'apprentissage et le test du balltree de sklearn.
 
-    Parameters
+    Paramètres
     ----------
-    dataset : TYPE
-        DESCRIPTION.
-    datatest : TYPE
-        DESCRIPTION.
-    separateur : TYPE, optional
-        DESCRIPTION. The default is ",".
+    dataset : string
+        Chemin du fichier csv avec les données d'entrainement.
+        Ce fichier ne doit contenir que des float.
+    datatest : string
+        Chemin du fichier csv avec les données de test.
+        Ce fichier ne doit contenir que des float.
+    separateur : string, optional
+        String contenant le séparateur utilisé dans fichier.
+        La valeur par défaut est ",".
 
-    Returns
+    Retours
     -------
-    fiabilite : TYPE
-        DESCRIPTION.
-    temps : TYPE
-        DESCRIPTION.
-    temps_app : TYPE
-        DESCRIPTION.
+    fiabilite : float
+        Précision de l'algorithme sur cet ensemble de données (en pourcentage).
+    temps : float
+        Temps pour classer un point en milliseconde.
+    temps_app : float
+        Temps pour réaliser l'apprentissage.
 
     """
     start = time.time()
-    neigh = apprentissage_sklearn(dataset, separateur)
+    tree = apprentissage_sklearn(dataset, separateur)
     end_1 = time.time()
-    fiabilite, nb_test = test_donnees_sklearn(datatest, neigh, separateur)
+    fiabilite, nb_test = test_donnees_sklearn(datatest, tree, separateur)
     end_2 = time.time()
     temps_app = (end_1 - start) * 1000
     temps = (end_2 - start) * 1000 / nb_test
@@ -675,64 +781,26 @@ def ball_tree_sklearn(dataset, datatest, separateur=","):
 # _____________________________________________________________________________
 
 
-def recuperer_classe(data):
-    """
-    Renvoie une liste contenant la classe de chaque point.
-
-    Parameters
-    ----------
-    data : list
-        liste de points
-    Returns
-    -------
-    classes : list
-        liste d'entiers
-    """
-    classes = []
-    for point in data:
-        classes.append(point[-1])
-    return classes
-
-
-def liste_donnes(points):
-    """
-    Enlève les classes des coordonnées des points.
-
-    Parameters
-    ----------
-    points : list
-        liste de points
-    Returns
-    -------
-    donnees : list
-        liste de points
-    """
-    donnees = [point[:-1] for point in points]
-    return donnees
-
-
 def proba_naives_sklearn(point, points):
     """
     Reste.
 
-    Parameters
+    Paramètres
     ----------
-    point : TYPE
-        DESCRIPTION.
-    points : TYPE
-        DESCRIPTION.
+    point : array_like
+        Liste de la forme (nb_parametre) contenant les coordonnées du
+        `point`.
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées avec leurs classes.
 
-    Returns
+    Retours
     -------
-    TYPE
-        DESCRIPTION.
-    TYPE
-        DESCRIPTION.
-    temps : TYPE
-        DESCRIPTION.
+    prediction_sk : float
+        Classe prédite par Naive Bayes pour `point`.
+
 
     """
-    start = time.time()
     points_sc = liste_donnes(points)
     classes = recuperer_classe(points)
     clf = GaussianNB()
@@ -741,9 +809,8 @@ def proba_naives_sklearn(point, points):
     clf_pf = GaussianNB()
     clf_pf.partial_fit(points_sc, classes, np.unique(classes))
     GaussianNB()
-    end = time.time()
-    temps = end - start
-    return (clf_pf.predict_proba(point)), (int(clf.predict(point))), temps
+    prediction_sk = clf.predict(point)
+    return prediction_sk
 
 
 # naive bayes programmé
@@ -751,35 +818,40 @@ def proba_naives_sklearn(point, points):
 
 def calcul_ecart(points):
     """
-    Calcul l'écart entre la classe de et le rang de la classe parmis.
+    Calcul l'écart entre la première classe et 0.
 
-    les autres classes ex : vin à pH 6 qui est le 3eme pH testé
-    (classe = 6, rang = 3 ), pour eviter un décalage lors de l'utilisation
-    d'une fonction
-    Parameters
+    Paramètres
     ----------
-    points : list
-        liste de points
-    Returns
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées avec leurs classes.
+
+    Retours
     -------
-    integer
+    ecart : int
+
     """
     classes = set(point[-1] for point in points)
-    return int(min(classes))
+    ecart = int(min(classes))
+    return ecart
 
 
 def calcul_esp(points):
     """
-    Renvoie l'esperance de chaque catégorie en fonction de sa classe.
+    Calcul l'esperance de chaque catégorie en fonction de sa classe.
 
-    Parameters
+    Paramètres
     ----------
-    points : list
-        liste de points
-    Returns
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées avec leurs classes.
+
+    Retours
     -------
-    esperance_par_classe : list
-        liste d'entiers
+    esperance_par_classe : array_like
+        Liste de la forme (nb_classe, nb_parametre) contenant les espérances
+        de chaque paramètre pour chaque classe.
+
     """
     dim_point = len(points[0]) - 1
     esperance_par_classe = []
@@ -802,15 +874,18 @@ def calcul_var(points, ecart):
     """
     Renvoie la variance de chaque catégorie en fonction de sa classe.
 
-    Parameters
+    Paramètres
     ----------
-    points : list
-        liste de points
-    ecart : integer
-    Returns
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées avec leurs classes.
+
+    Retours
     -------
-    variance_par_classe : list
-        liste d'entiers
+    variance_par_classe : array_like
+        Liste de la forme (nb_classe, nb_parametre) contenant les variances
+        de chaque paramètre pour chaque classe.
+
     """
     dim_point = len(points[0]) - 1
     variance_par_classe = []
@@ -833,17 +908,19 @@ def calcul_var(points, ecart):
 
 def calcul_proba_classe(points):
     """
-    Renvoie la liste de probabilité qu'un point prit dans la liste.
+    Calcul les probas pour les points de `points` d'être dans chaque classes.
 
-    appartienne à chaqu'une des classe (ex homme ou femme)
-    Parameters
+    Paramètres
     ----------
-    points : list
-        liste de points
-    Returns
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées avec leurs classes.
+
+    Retours
     -------
-    liste_proba : list
-        liste de probabilitées
+    liste_proba : array_like
+        Liste de la forme (nb_classe) contenant la probabilité d'appartenir
+        à chaque classe.
     """
     liste_classe = set(point[-1] for point in points)
     liste_proba = []
@@ -860,27 +937,30 @@ def calcul_proba_categorie_sachant_classe(
     point, categorie, classe, ecart, esperance, variance
 ):
     """
-    Reste.
+    Calcul les proban de chaque paramètres sachant la classe de `point`. 
 
-    Parameters
+    Paramètres
     ----------
-    point : list
-        coordonnées du point étudié
-    points : list
-        liste de points
-    categorie : in
-        rang du paramètre étudié
+    point : array_like
+        Liste de la forme (nb_parametre) contenant les coordonnées du point.
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées.
+    categorie : int
+        Rang du paramètre étudié.
     classe : int
-        rang de la classe étudié
+        Rrang de la classe étudié.
     ecart : int
-    esperance : list
-        liste des espérances d'une catégorie en fonction des classes
-    variance : list
-        liste des variances d'une catégorie en fonction des classes
-    Returns
+    esperance : array_like
+        Liste de la forme (nb_classe, nb_parametre) contenant les espérances
+        de chaque paramètre pour chaque classe.
+    variance : array_like
+        Liste de la forme (nb_classe, nb_parametre) contenant les variances
+        de chaque paramètre pour chaque classe.
+    Retours
     -------
     proba : int
-        probabilité de la catégorie en fonction de la classe
+        Probabilité de la catégorie en fonction de la classe.
     """
     esp = esperance[int(classe - ecart)][0][categorie]
     var = variance[int(classe - ecart)][0][categorie]
@@ -892,24 +972,23 @@ def calcul_proba_categorie_sachant_classe(
 
 def calcul_proba_bayes(point, points):
     """
-    Reste.
+    Calcul la classe à laquelles `point` à le plus de chance d'appartenir.
 
-    Parameters
+    Paramètres
     ----------
-    point : TYPE
-        DESCRIPTION.
-    points : TYPE
-        DESCRIPTION.
-    Returns
+    point : array_like
+        Liste de la forme (nb_parametre) contenant les coordonnées du
+        `point`.
+    points : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        représenter par les listes de leurs coordonnées avec leurs classes.
+
+    Retours
     -------
-    liste_proba : list
-        liste avec la probabilité d'appartenance du point à chaque classe
-    integer
-        classe ayant la plus grande probabilité d'etre celle du point étudié
-    temps : integer
-        temps moyenne d'une boucle d'apprentissage
+    prediction_b : float
+        Classe prédite por `point`.
+
     """
-    start = time.time()
     ecart = calcul_ecart(points)
     proba_classe = calcul_proba_classe(points)
     classes = set(point[-1] for point in points)
@@ -927,61 +1006,66 @@ def calcul_proba_bayes(point, points):
             )
             liste_proba.append([(proba_classe[int(classe - ecart)][0] *
                                  proba_categorie_sachant_classe), classe])
-    end = time.time()
-    temps = end - start
-    return liste_proba, max(liste_proba)[1], temps
+    prediction_nb = max(liste_proba)[1]
+    return prediction_nb
 
 
 def comparateur(liste_test, dataset):
     """
-    Compare les succes des 2 algorithmes avec une liste dont la  classe.
+    Test les 2 algorithmes.
 
-    est deja connue
-    Parameters
+    Paramètres
     ----------
-    liste_test : list
-        liste de points dont on connait la classe et qu'on a retiré de dataset
-    dataset : list
-        liste de points
-    Returns
+    liste_test : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        dont on connait la classe.
+    dataset : array_like
+        Liste de la forme (nb_point, nb_parametre + 1) contenant des points
+        servant pour l'apprentissage.
+
+    Retours
     -------
-    succes_1 : float
-        précision de skt learn
-    temps_1 : float
-        temps de skt learn
-    succes_2 : float
-        précision de calcul_naive_bayes
-    temps_2 : float
-        temps de calcul_naive_bayes
+    fiabilite_sk : float
+        Précision de sklearn sur cet ensemble de données (en pourcentage).
+    temps_sk : float
+        Temps pour classer un point avec sklearn en milliseconde.
+    fiabilite_nb : float
+        Précision de `calcul_naive_bayes` sur cet ensemble de données
+        (en pourcentage).
+    temps_nb : float
+        Temps pour classer un point avec `calcul_naive_bayes` en milliseconde.
+
     """
     classes = recuperer_classe(liste_test)
     points = liste_donnes(liste_test)
-    temps_1 = 0
-    temps_2 = 0
-    succes_1 = 0
-    succes_2 = 0
+    temps_sk = 0
+    temps_nb = 0
+    fiabilite_sk = 0
+    fiabilite_nb = 0
     taille = len(liste_test)
-    for i in tqdm(range(len(liste_test))):
-        liste_sk = proba_naives_sklearn([points[i]], dataset)
-        liste = calcul_proba_bayes([points[i]], dataset)
-        temps_1 += liste_sk[2]
-        temps_2 += liste[2]
-        if liste_sk[1] == classes[i]:
-            succes_1 += 1
-        if liste[1] == classes[i]:
-            succes_2 += 1
-    temps_1 = temps_1 / taille * 1000
-    temps_2 = temps_2 / taille * 1000
-    succes_1 = succes_1 / taille * 100
-    succes_2 = succes_2 / taille * 100
-    return succes_1, temps_1, succes_2, temps_2
+    for i in tqdm(range(taille)):
+        start = time.time()
+        prediction_sk = proba_naives_sklearn([points[i]], dataset)
+        temps_sk += time.time() - start
+        start = time.time()
+        prediciton_b = calcul_proba_bayes([points[i]], dataset)
+        temps_nb += time.time() - start
+        if prediction_sk == classes[i]:
+            fiabilite_sk += 1
+        if prediciton_b== classes[i]:
+            fiabilite_nb += 1
+    temps_sk = temps_sk / taille * 1000
+    temps_nb = temps_nb / taille * 1000
+    fiabilite_sk = fiabilite_sk / taille * 100
+    fiabilite_nb = fiabilite_nb / taille * 100
+    return fiabilite_sk, temps_sk, fiabilite_nb, temps_nb
 
 
 def comparaison(donnee, precision, separateur=","):
     """
     Reste.
 
-    Parameters
+    Paramètres
     ----------
     donnee : TYPE
         DESCRIPTION.
@@ -990,7 +1074,7 @@ def comparaison(donnee, precision, separateur=","):
     separateur : TYPE, optional
         DESCRIPTION. The default is ",".
 
-    Returns
+    Retours
     -------
     None.
 
