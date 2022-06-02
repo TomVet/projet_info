@@ -494,7 +494,7 @@ def separe_liste(points):
         centre_1 = points[distances.index(distances_triee[-1])]
         centre_2 = points[distances.index(distances_triee[-2])]
         longueur = -3
-        # Si les 2 points les plus loin sont identique on choisi un autre point.
+        # Si `centre_1` = `centre_2` on choisi un autre point.
         while np.array_equal(centre_1, centre_2):
             centre_2 = points[distances.index(distances_triee[longueur])]
             longueur -= 1
@@ -937,7 +937,7 @@ def calcul_proba_categorie_sachant_classe(
     point, categorie, classe, ecart, esperance, variance
 ):
     """
-    Calcul les proban de chaque paramètres sachant la classe de `point`. 
+    Calcul les proban de chaque paramètres sachant la classe de `point`.
 
     Paramètres
     ----------
@@ -1052,7 +1052,7 @@ def comparateur(liste_test, dataset):
         temps_nb += time.time() - start
         if prediction_sk == classes[i]:
             fiabilite_sk += 1
-        if prediciton_b== classes[i]:
+        if prediciton_b == classes[i]:
             fiabilite_nb += 1
     temps_sk = temps_sk / taille * 1000
     temps_nb = temps_nb / taille * 1000
@@ -1143,7 +1143,7 @@ Nombre de classe : {nb_classe :.0f}"""
         \tPrécision : {fiabilite_6 :.2f} %
         \tTemps classement d'un point : {tps_point_6 :.2f} ms\n\n\t\tSklearn :
         \tPrécision : {fiabilite_5 :.2f} %
-        \tTemps classement d'un point : {tps_point_5 :.5f} ms"""
+        \tTemps classement d'un point : {tps_point_5 :.2f} ms"""
     )
     print("---------------------------------------")
 
