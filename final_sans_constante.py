@@ -9,6 +9,7 @@ import csv
 import time
 from collections import Counter
 import numpy as np
+from tqdm import tqdm
 from sklearn.neighbors import NearestCentroid
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -889,7 +890,8 @@ def calcul_proba_bayes(point, points):
             proba_categorie_sachant_classe = proba_categorie_sachant_classe * \
                 calcul_proba_categorie_sachant_classe(
                     point, points, i, classe, ecart, esp, var)
-        liste_proba.append([(proba_classe[int(classe-ecart)][0]*proba_categorie_sachant_classe), classe])
+        liste_proba.append(
+            [(proba_classe[int(classe-ecart)][0]*proba_categorie_sachant_classe), classe])
     end = time.time()
     temps = (end - start)
     return liste_proba, max(liste_proba)[1], temps
@@ -926,7 +928,7 @@ def comparateur(liste_test, dataset):
     succes_1 = 0
     succes_2 = 0
     taille = len(liste_test)
-    for i in range(len(liste_test)):
+    for i in tqdm(range(len(liste_test))):
         Liste = proba_naives_sklearn([points[i]], dataset)
         liste = calcul_proba_bayes([points[i]], dataset)
         temps_1 += Liste[2]
@@ -941,6 +943,7 @@ def comparateur(liste_test, dataset):
     succes_2 = succes_2/taille * 100
     return succes_1, temps_1, succes_2, temps_2
 
+
 def comparaison(donnee, precision, separateur=','):
     nom, dataset, datatest = donnee
     fiabilite_1, tps_point_1, classes, tps_app_1 = centroide_plus_proche(
@@ -954,8 +957,8 @@ def comparaison(donnee, precision, separateur=','):
         dataset, datatest)
     data = recuperer_donnee_csv(dataset)
     test = recuperer_donnee_csv(datatest)
-    (fiabilite_5, tps_point_5), (fiabilite_6, tps_point_6) = comparateur(test,
-                                                                         data)
+    fiabilite_5, tps_point_5, fiabilite_6, tps_point_6 = comparateur(test,
+                                                                     data)
     textes = [(fiabilite_1, tps_point_1, tps_app_1, fiabilite_2, tps_point_2,
                tps_app_2, '\tNearest centroide :'),
               (fiabilite_3, tps_point_3, tps_app_3, fiabilite_4, tps_point_4,
@@ -990,5 +993,7 @@ start = time.time()
 comparaison(IRIS, 15)
 print((time.time() - start) * 1000)
 start = time.time()
+comparaison(WATER_POTABILITY, 15)
+print((time.time() - start) * 1000)
 comparaison(WATER_POTABILITY, 15)
 print((time.time() - start) * 1000)

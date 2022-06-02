@@ -41,7 +41,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
 HEART = ("Maladie cardiaque", "heart.csv", "heart_test.csv")
-WATER_POTABILITY = ("Potabilité de l'eau", "water_potability_1.csv",
+WATER_POTABILITY = ("Potabilité de l'eau", "water_potability.csv",
                     "water_potability_test.csv")
 DIABETES = ("Diabète", "diabetes.csv", "diabetes_test.csv")
 IRIS = ("Iris", "iris.csv", "iris_test.csv")
@@ -416,7 +416,7 @@ def separe_liste(points):
         while np.array_equal(centre_1, centre_2):
             centre_2 = points[distances.index(distances_triee[longueur])]
             longueur -= 1
-            if longueur == -len(points):
+            if longueur == - len(points):
                 return points
         points_1 = []
         points_2 = []
@@ -517,10 +517,12 @@ def prediction(point, centroides, classes):
         Liste des centroides des sous .
     classes : TYPE
         DESCRIPTION.
+
     Returns
     -------
     TYPE
         DESCRIPTION.
+
     """
     dist_min = calcul_distance_euclidienne(centroides[0][:-1], point[:-1])
     centroide_min = centroides[0]
@@ -546,12 +548,14 @@ def classification_balltree(precision, dataset, datatest, separateur=","):
         DESCRIPTION.
     separateur : TYPE, optional
         DESCRIPTION. La valeur par défaut est ','.
+
     Returns
     -------
     fiabilite : TYPE
         DESCRIPTION.
     temps : TYPE
         DESCRIPTION.
+
     """
     start = time.time()
     listes = ball_tree(recuperer_donnee_csv(dataset, separateur), precision)
@@ -779,7 +783,7 @@ def calcul_esp(points):
     """
     dim_point = len(points[0]) - 1
     esperance_par_classe = []
-    classes = set(point[-1] for point in points)
+    classes = {point[-1] for point in points}
     for classe in classes:
         esperance = []
         for rang in range(dim_point):
@@ -790,7 +794,7 @@ def calcul_esp(points):
                     compteur += 1
                     somme += point[rang]
             esperance.append(somme / compteur)
-            esperance_par_classe.append([esperance, classe])
+        esperance_par_classe.append([esperance, classe])
     return esperance_par_classe
 
 
@@ -841,7 +845,7 @@ def calcul_proba_classe(points):
     liste_proba : list
         liste de probabilitées
     """
-    liste_classe = {point[-1] for point in points}
+    liste_classe = set(point[-1] for point in points)
     liste_proba = []
     for classe in liste_classe:
         compteur = 0
@@ -881,7 +885,7 @@ def calcul_proba_categorie_sachant_classe(
     esp = esperance[int(classe - ecart)][0][categorie]
     var = variance[int(classe - ecart)][0][categorie]
     proba = np.exp((-((point[0][categorie] - esp) ** 2) / (2 * var))) / (
-        np.sqrt(2 * float(np.pi) * var)
+        np.sqrt(2 * np.pi * var)
     )
     return proba
 
@@ -966,8 +970,8 @@ def comparateur(liste_test, dataset):
             succes_1 += 1
         if liste[1] == classes[i]:
             succes_2 += 1
-    temps_1 = (temps_1 / taille) * 1000
-    temps_2 = (temps_2 / taille) * 1000
+    temps_1 = temps_1 / taille * 1000
+    temps_2 = temps_2 / taille * 1000
     succes_1 = succes_1 / taille * 100
     succes_2 = succes_2 / taille * 100
     return succes_1, temps_1, succes_2, temps_2
@@ -1060,7 +1064,7 @@ Nombre de classe : {nb_classe :.0f}"""
     print("---------------------------------------")
 
 
-# comparaison(HEART, 15)
-# comparaison(DIABETES, 15)
+comparaison(HEART, 15)
+comparaison(DIABETES, 15)
 comparaison(IRIS, 15)
-comparaison(WATER_POTABILITY, 7)
+comparaison(WATER_POTABILITY, 15)
