@@ -35,6 +35,7 @@ import csv
 import time
 from collections import Counter
 import numpy as np
+from tqdm import tqdm
 from sklearn.neighbors import NearestCentroid
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -62,7 +63,7 @@ def recuperer_donnee_csv(fichier, separateur=","):
         Chemin du fichier csv a lire.
         Ce fichier ne doit contenir que des float.
     separateur : string, optional
-        String contenant le séparateur utilisé dans `fichier`.
+        String contenant le séparateur utilisé dans fichier.
         La valeur par défaut est ",".
 
     Retours
@@ -1069,21 +1070,16 @@ def comparateur(liste_test, dataset):
 
 def comparaison(donnee, precision, separateur=","):
     """
-    Lance les 3 algorithme sur le même dataset.
-
-    Imprime les précisions et temps pour chaque algorithme.
+    Reste.
 
     Paramètres
     ----------
-    donnee : array_like
-        Liste contenant le nom du dataset, le chemin du fichier d'apprentissage
-        et le chemin du fichier de test.
-    precision : int
-        Uniquement pour le Balltree que l'on code, c'est le nombre de fois que
-        la liste de départ serat séparé.
-    separateur : string, optional
-        String contenant le séparateur utilisé dans fichier.
-        La valeur par défaut est ",".
+    donnee : TYPE
+        DESCRIPTION.
+    precision : TYPE
+        DESCRIPTION.
+    separateur : TYPE, optional
+        DESCRIPTION. The default is ",".
 
     Retours
     -------
@@ -1165,7 +1161,175 @@ Nombre de classe : {nb_classe :.0f}"""
 # _____________________________________________________________________________
 
 
-comparaison(HEART, 15)
-comparaison(DIABETES, 15)
-comparaison(IRIS, 15)
-comparaison(WATER_POTABILITY, 15)
+precision = 15
+donnee = HEART
+separateur = ","
+resultat = open("resultat.txt", "x")
+
+nom, dataset, datatest = donnee
+resultat.write(nom+'\n')
+resultat.write(
+    "nearest_neighbor, tps, tps_app, balltree, tps, tps_app, naive_bayes, tps, tps_app\n")
+for _ in tqdm(range(100)):
+
+    fiabilite_1, tps_point_1, classes, tps_app_1 = centroide_plus_proche(
+        dataset, datatest, separateur
+    )
+    fiabilite_2, tps_point_2, tps_app_2 = centroide_plus_proche_sklearn(
+        dataset, datatest, separateur
+    )
+    nb_classe = len(classes)
+    fiabilite_3, tps_point_3, tps_app_3 = classification_balltree(
+        precision, dataset, datatest, separateur
+    )
+    fiabilite_4, tps_point_4, tps_app_4 = ball_tree_sklearn(dataset, datatest)
+    data = recuperer_donnee_csv(dataset)
+    test = recuperer_donnee_csv(datatest)
+    fiabilite_5, tps_point_5, fiabilite_6, tps_point_6 = comparateur(test,
+                                                                     data)
+    a = str(fiabilite_1)
+    b = str(tps_point_1)
+    c = str(tps_app_1)
+    d = str(fiabilite_2)
+    e = str(tps_point_2)
+    f = str(tps_app_2)
+    g = str(fiabilite_3)
+    h = str(tps_point_3)
+    i = str(tps_app_3)
+    j = str(fiabilite_4)
+    k = str(tps_point_4)
+    l = str(tps_app_4)
+    m = str(fiabilite_5)
+    n = str(tps_point_5)
+    o = str(fiabilite_6)
+    p = str(tps_point_6)
+    resultat.write(a+','+b+','+c+','+d+','+e+','+f+','+g+',' +
+                   h+','+i+','+j+','+k+','+l+','+m+','+n+','+o+','+p+'\n')
+
+print("fin")
+donnee = DIABETES
+nom, dataset, datatest = donnee
+resultat.write(nom+'\n')
+resultat.write(
+    "nearest_neighbor, tps, tps_app, balltree, tps, tps_app, naive_bayes, tps, tps_app"+'\n')
+for _ in tqdm(range(100)):
+
+    fiabilite_1, tps_point_1, classes, tps_app_1 = centroide_plus_proche(
+        dataset, datatest, separateur
+    )
+    fiabilite_2, tps_point_2, tps_app_2 = centroide_plus_proche_sklearn(
+        dataset, datatest, separateur
+    )
+    nb_classe = len(classes)
+    fiabilite_3, tps_point_3, tps_app_3 = classification_balltree(
+        precision, dataset, datatest, separateur
+    )
+    fiabilite_4, tps_point_4, tps_app_4 = ball_tree_sklearn(dataset, datatest)
+    data = recuperer_donnee_csv(dataset)
+    test = recuperer_donnee_csv(datatest)
+    fiabilite_5, tps_point_5, fiabilite_6, tps_point_6 = comparateur(test,
+                                                                     data)
+    a = str(fiabilite_1)
+    b = str(tps_point_1)
+    c = str(tps_app_1)
+    d = str(fiabilite_2)
+    e = str(tps_point_2)
+    f = str(tps_app_2)
+    g = str(fiabilite_3)
+    h = str(tps_point_3)
+    i = str(tps_app_3)
+    j = str(fiabilite_4)
+    k = str(tps_point_4)
+    l = str(tps_app_4)
+    m = str(fiabilite_5)
+    n = str(tps_point_5)
+    o = str(fiabilite_6)
+    p = str(tps_point_6)
+    resultat.write(a+','+b+','+c+','+d+','+e+','+f+','+g+',' +
+                   h+','+i+','+j+','+k+','+l+','+m+','+n+','+o+','+p+'\n')
+
+print("fin")
+donnee = IRIS
+nom, dataset, datatest = donnee
+resultat.write(nom+'\n')
+resultat.write(
+    "nearest_neighbor, tps, tps_app, balltree, tps, tps_app, naive_bayes, tps, tps_app"+'\n')
+for _ in tqdm(range(100)):
+
+    fiabilite_1, tps_point_1, classes, tps_app_1 = centroide_plus_proche(
+        dataset, datatest, separateur
+    )
+    fiabilite_2, tps_point_2, tps_app_2 = centroide_plus_proche_sklearn(
+        dataset, datatest, separateur
+    )
+    nb_classe = len(classes)
+    fiabilite_3, tps_point_3, tps_app_3 = classification_balltree(
+        precision, dataset, datatest, separateur
+    )
+    fiabilite_4, tps_point_4, tps_app_4 = ball_tree_sklearn(dataset, datatest)
+    data = recuperer_donnee_csv(dataset)
+    test = recuperer_donnee_csv(datatest)
+    fiabilite_5, tps_point_5, fiabilite_6, tps_point_6 = comparateur(test,
+                                                                     data)
+    a = str(fiabilite_1)
+    b = str(tps_point_1)
+    c = str(tps_app_1)
+    d = str(fiabilite_2)
+    e = str(tps_point_2)
+    f = str(tps_app_2)
+    g = str(fiabilite_3)
+    h = str(tps_point_3)
+    i = str(tps_app_3)
+    j = str(fiabilite_4)
+    k = str(tps_point_4)
+    l = str(tps_app_4)
+    m = str(fiabilite_5)
+    n = str(tps_point_5)
+    o = str(fiabilite_6)
+    p = str(tps_point_6)
+    resultat.write(a+','+b+','+c+','+d+','+e+','+f+','+g+',' +
+                   h+','+i+','+j+','+k+','+l+','+m+','+n+','+o+','+p+'\n')
+
+print("fin")
+donnee = WATER_POTABILITY
+nom, dataset, datatest = donnee
+resultat.write(nom+'\n')
+resultat.write(
+    "nearest_neighbor, tps, tps_app, balltree, tps, tps_app, naive_bayes, tps, tps_app"+'\n')
+for _ in tqdm(range(100)):
+
+    fiabilite_1, tps_point_1, classes, tps_app_1 = centroide_plus_proche(
+        dataset, datatest, separateur
+    )
+    fiabilite_2, tps_point_2, tps_app_2 = centroide_plus_proche_sklearn(
+        dataset, datatest, separateur
+    )
+    nb_classe = len(classes)
+    fiabilite_3, tps_point_3, tps_app_3 = classification_balltree(
+        precision, dataset, datatest, separateur
+    )
+    fiabilite_4, tps_point_4, tps_app_4 = ball_tree_sklearn(dataset, datatest)
+    data = recuperer_donnee_csv(dataset)
+    test = recuperer_donnee_csv(datatest)
+    fiabilite_5, tps_point_5, fiabilite_6, tps_point_6 = comparateur(test,
+                                                                     data)
+    a = str(fiabilite_1)
+    b = str(tps_point_1)
+    c = str(tps_app_1)
+    d = str(fiabilite_2)
+    e = str(tps_point_2)
+    f = str(tps_app_2)
+    g = str(fiabilite_3)
+    h = str(tps_point_3)
+    i = str(tps_app_3)
+    j = str(fiabilite_4)
+    k = str(tps_point_4)
+    l = str(tps_app_4)
+    m = str(fiabilite_5)
+    n = str(tps_point_5)
+    o = str(fiabilite_6)
+    p = str(tps_point_6)
+    resultat.write(a+','+b+','+c+','+d+','+e+','+f+','+g+',' +
+                   h+','+i+','+j+','+k+','+l+','+m+','+n+','+o+','+p+'\n')
+
+resultat.close()
