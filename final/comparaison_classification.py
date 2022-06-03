@@ -6,12 +6,12 @@ On s'intéresse ici à :
     Nearest centroide
     BallTree
     Naive Bayes
-Nous implementerons ces 3 algorithmes et pour vérifié leurs implementation on
-utilise le module sklearn dans lequelle ces algorithmes sont implémenté.
+Nous implementerons ces 3 algorithmes et pour vérifier leurs implementation on
+utilise le module sklearn dans lequelle ces algorithmes sont implémentés.
 
 _______________________________________________________________________________
 
-Pour tester les performances des algorithmes, ils sont testé sur 4 dataset:
+Pour tester les performances des algorithmes, ils sont testés sur 4 datasets:
     - Dataset HEART :
         https://www.kaggle.com/ronitf/heart-disease-uci
     - Dataset WATER_POTABILITY :
@@ -52,7 +52,7 @@ IRIS = ("Iris", "iris.csv", "iris_test.csv")
 
 def recuperer_donnee_csv(fichier, separateur=","):
     """
-    Créée une liste de listes contenant les données de `fichier`.
+    Crééer une liste de listes contenant les données de `fichier`.
 
     Chaque ligne de `fichier` devient une sous liste de `data`.
 
@@ -120,7 +120,7 @@ def calcul_coordonnees_centroide(points):
     ----------
     points : array_like
         Liste de la forme (nb_point, nb_parametre) contenant les coordonnées
-        des points sans leurs classe.
+        des points sans leurs classes.
 
     Retours
     -------
@@ -233,7 +233,7 @@ def calcul_centroides(dataset):
     ----------
     dataset : array_like
         Liste de la forme (nb_point, nb_parametre + 1) contenant des points
-        représenter par les listes de leurs coordonnées.
+        représenté par les listes de leurs coordonnées.
 
     Retours
     -------
@@ -341,8 +341,8 @@ def centroide_plus_proche(dataset, datatest, separateur=","):
     return fiabilite, temps, classes, tps_app
 
 
-# Définition des fonctions pour utilisée l'algorithme nearest centroide de
-# sklear.
+# Définition des fonctions pour utiliser l'algorithme nearest centroide de
+# sklearn.
 # _____________________________________________________________________________
 
 
@@ -359,7 +359,7 @@ def apprentissage(fichier, clf, separateur=","):
         Fonction de classification de la bibliothèque scikitlearn,
         ici NearestCentroid().
     separateur : string, optional
-        String contenant le separateur utiliser dans fichier.
+        String contenant le separateur utilisé dans fichier.
         La valeur par défaut est ",".
 
     Retours
@@ -388,7 +388,7 @@ def test_donnees(fichier, clf, separateur=","):
     Paramètres
     ----------
     fichier : string
-        Chemin du fichier csv avec les donnees de test.
+        Chemin du fichier csv avec les données de test.
         Ce fichier ne doit contenir que des float.
     clf : fonction
         Fonction de classification de la bibliothèque scikitlearn,
@@ -402,7 +402,7 @@ def test_donnees(fichier, clf, separateur=","):
     fiabilite : float
         Précision de l'algorithme sur cet ensemble de données (en pourcentage).
     nb_test : int
-        Nombre de test éffectué pour calculer la fiabilité.
+        Nombre de test effectué pour calculer la fiabilité.
 
     """
     datatest = recuperer_donnee_csv(fichier, separateur)
@@ -460,9 +460,9 @@ def separe_liste(points):
     """
     Sépare la liste de point en 2 sous listes.
 
-    Calcul le centroide de points et trouve les 2 points les plus éloigné du
+    Calcul le centroide de points et trouve les 2 points les plus éloignés du
     centroide. Puis sépare les points en fonction de leurs distance au 2
-    points les plus éloigné du centroide.
+    points les plus éloignés du centroide.
 
     Paramètres
     ----------
@@ -485,7 +485,7 @@ def separe_liste(points):
         centroide = calcul_coordonnees_centroide(points)
         distances = []
         # On calcul les distance entre le centroide de `points` et les points
-        # pour pouvoir trouver les 2 points les plus éloigné.
+        # pour pouvoir trouver les 2 points les plus éloignés.
         for point in points:
             distances.append(calcul_distance_euclidienne(point[:-1],
                                                          centroide))
@@ -501,7 +501,7 @@ def separe_liste(points):
                 return points
         points_1 = []
         points_2 = []
-        # On attribue chaque point de `points` à une des 2 nouvelle liste.
+        # On attribue chaque point de `points` à une des 2 nouvelles listes.
         for point in points:
             dist_1 = calcul_distance_euclidienne(centre_1[:-1], point[:-1])
             dist_2 = calcul_distance_euclidienne(centre_2[:-1], point[:-1])
@@ -522,12 +522,12 @@ def ball_tree(dataset, profondeur):
         Liste de la forme (nb_point, nb_parametre + 1) contenant des points
         représenter par les listes de leurs coordonnées.
     profondeur : int
-        Nombre de fois que la liste de départ est séparé.
+        Nombre de fois que la liste de départ est séparée.
 
     Retours
     -------
     listes : array_like
-        Liste de listes de points créé à partir de dataset selon l'algorithme
+        Liste de listes de points créés à partir de dataset selon l'algorithme
         BallTree.
 
     """
@@ -548,19 +548,19 @@ def ball_tree(dataset, profondeur):
 
 def classe_liste(points):
     """
-    Renvoie la classe la plus représenté dans la liste `points`.
+    Renvoie la classe la plus représentée dans la liste `points`.
 
     Paramètres
     ----------
     points : array_like
         Liste de la forme (nb_point, nb_parametre + 1) contenant des points
-        représenter par les listes de leurs coordonnées avec en dernier leurs
+        représentés par les listes de leurs coordonnées avec en dernier leurs
         classes.
 
     Retours
     -------
     classe : int
-        Classe la plus représenter dans la liste `points`.
+        Classe la plus représentée dans la liste `points`.
 
     """
     classes = []
@@ -637,7 +637,7 @@ def classification_balltree(profondeur, dataset, datatest, separateur=","):
     Paramètres
     ----------
     profondeur : int
-        Nombre de fois que la liste de départ est séparé.
+        Nombre de fois que la liste de départ est séparée.
     dataset : string
         Chemin du fichier csv avec les données d'entrainement.
         Ce fichier ne doit contenir que des float.
@@ -674,7 +674,7 @@ def classification_balltree(profondeur, dataset, datatest, separateur=","):
     return fiabilite, temps, temps_app
 
 
-# Définition des fonctions pour utilisée l'algorithme ballTree de sklear.
+# Définition des fonctions pour utiliser l'algorithme ballTree de sklearn.
 # _____________________________________________________________________________
 
 
@@ -788,7 +788,7 @@ def calcul_ecart(points):
     ----------
     points : array_like
         Liste de la forme (nb_point, nb_parametre + 1) contenant des points
-        représenter par les listes de leurs coordonnées avec leurs classes.
+        représentés par les listes de leurs coordonnées avec leurs classes.
 
     Retours
     -------
@@ -802,13 +802,13 @@ def calcul_ecart(points):
 
 def calcul_esp(points):
     """
-    Calcul l'esperance de chaque catégorie en fonction de sa classe.
+    Calcul l'espérance de chaque catégorie en fonction de sa classe.
 
     Paramètres
     ----------
     points : array_like
         Liste de la forme (nb_point, nb_parametre + 1) contenant des points
-        représenter par les listes de leurs coordonnées avec leurs classes.
+        représentés par les listes de leurs coordonnées avec leurs classes.
 
     Retours
     -------
@@ -901,7 +901,7 @@ def calcul_proba_categorie_sachant_classe(
     point, categorie, classe, ecart, esperance, variance
 ):
     """
-    Calcul les proban de chaque paramètres sachant la classe de `point`.
+    Calcul les proba de chaque paramètre sachant la classe de `point`.
 
     Paramètres
     ----------
@@ -945,7 +945,7 @@ def calcul_proba_bayes(point, points):
         `point`.
     points : array_like
         Liste de la forme (nb_point, nb_parametre + 1) contenant des points
-        représenter par les listes de leurs coordonnées avec leurs classes.
+        représentés par les listes de leurs coordonnées avec leurs classes.
 
     Retours
     -------
@@ -974,7 +974,7 @@ def calcul_proba_bayes(point, points):
     return prediction_nb
 
 
-# Définition des fonctions pour utilisée l'algorithme Naive Bayes de sklear.
+# Définition des fonctions pour utilisée l'algorithme Naive Bayes de sklearn.
 # _____________________________________________________________________________
 
 
@@ -1161,7 +1161,7 @@ Nombre de classe : {nb_classe :.0f}"""
 
 # _____________________________________________________________________________
 
-# Comparaison des 3 algorithmes avec 4 dataset.
+# Comparaison des 3 algorithmes avec 4 datasets.
 # _____________________________________________________________________________
 
 
