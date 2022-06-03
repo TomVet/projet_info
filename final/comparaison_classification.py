@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-On cherche à comparer 3 algorithme de classification.
+On cherche à comparer 3 algorithmes de classification.
 
 On s'intéresse ici à :
     Nearest centroide
     BallTree
     Naive Bayes
-Nous implementerons ces 3 algorithmes et pour vérifier leurs implementation on
+Nous implémenterons ces 3 algorithmes et pour vérifier leurs implementations on
 utilise le module sklearn dans lequelle ces algorithmes sont implémentés.
 
 _______________________________________________________________________________
