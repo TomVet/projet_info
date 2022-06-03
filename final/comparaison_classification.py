@@ -6,12 +6,12 @@ On s'intéresse ici à :
     Nearest centroide
     BallTree
     Naive Bayes
-Nous implementerons ces 3 algorithmes et pour vérifié leurs implementation on
-utilise le module sklearn dans lequelle ces algorithmes sont implémenté.
+Nous implementerons ces 3 algorithmes et pour vérifier leurs implementation on
+utilise le module sklearn dans lequelle ces algorithmes sont implémentés.
 
 _______________________________________________________________________________
 
-Pour tester les performances des algorithmes, ils sont testé sur 4 dataset:
+Pour tester les performances des algorithmes, ils sont testés sur 4 datasets:
     - Dataset HEART :
         https://www.kaggle.com/ronitf/heart-disease-uci
     - Dataset WATER_POTABILITY :
@@ -52,7 +52,7 @@ IRIS = ("Iris", "iris.csv", "iris_test.csv")
 
 def recuperer_donnee_csv(fichier, separateur=","):
     """
-    Créée une liste de listes contenant les données de `fichier`.
+    Crééer une liste de listes contenant les données de `fichier`.
 
     Chaque ligne de `fichier` devient une sous liste de `data`.
 
